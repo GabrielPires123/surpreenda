@@ -1,0 +1,47 @@
+<?php
+
+namespace App\Repository;
+
+use App\Entity\Kit;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\Persistence\ManagerRegistry;
+
+/**
+ * @extends ServiceEntityRepository<Kit>
+ */
+class KitRepository extends ServiceEntityRepository
+{
+    public function __construct(ManagerRegistry $registry)
+    {
+        parent::__construct($registry, Kit::class);
+    }
+
+    public function save(Kit $entity, bool $flush = false): void
+    {
+        $this->getEntityManager()->persist($entity);
+        if ($flush) {
+            $this->getEntityManager()->flush();
+        }
+    }
+
+    public function remove(Kit $entity, bool $flush = false): void
+    {
+        $this->getEntityManager()->remove($entity);
+        if ($flush) {
+            $this->getEntityManager()->flush();
+        }
+    }
+
+    /**
+     * @return Kit[]
+     */
+    public function findAtivos(): array
+    {
+        return $this->createQueryBuilder('k')
+            ->andWhere('k.ativo = :ativo')
+            ->setParameter('ativo', true)
+            ->orderBy('k.preco', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
+}
