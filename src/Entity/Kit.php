@@ -12,9 +12,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Table(name: '`kit`')]
 class Kit
 {
-    #[ORM\Id]
-    #[ORM\Column(type: 'guid', unique: true)]
-    private string $id;
+    use UuidTrait;
 
     #[ORM\Column(length: 100)]
     #[Assert\NotBlank(message: 'O nome do kit é obrigatório.')]
@@ -47,87 +45,30 @@ class Kit
     #[ORM\Column]
     private bool $ativo = true;
 
-    #[ORM\Column]
-    private \DateTimeImmutable $createdAt;
-
-    #[ORM\Column(nullable: true)]
-    private ?\DateTimeImmutable $updatedAt = null;
-
     public function __construct()
     {
-        $this->id = $this->generateUuid();
-        $this->createdAt = new \DateTimeImmutable();
+        $this->initUuid();
         $this->produtos = new ArrayCollection();
         $this->categorias = new ArrayCollection();
     }
 
-    public function getId(): string
-    {
-        return $this->id;
-    }
+    public function getNome(): string { return $this->nome; }
+    public function setNome(string $nome): static { $this->nome = $nome; return $this; }
 
-    public function getNome(): string
-    {
-        return $this->nome;
-    }
+    public function getDescricao(): ?string { return $this->descricao; }
+    public function setDescricao(?string $descricao): static { $this->descricao = $descricao; return $this; }
 
-    public function setNome(string $nome): static
-    {
-        $this->nome = $nome;
-        return $this;
-    }
+    public function getPreco(): float { return $this->preco; }
+    public function setPreco(float $preco): static { $this->preco = $preco; return $this; }
 
-    public function getDescricao(): ?string
-    {
-        return $this->descricao;
-    }
+    public function getImagemUrl(): ?string { return $this->imagemUrl; }
+    public function setImagemUrl(?string $imagemUrl): static { $this->imagemUrl = $imagemUrl; return $this; }
 
-    public function setDescricao(?string $descricao): static
-    {
-        $this->descricao = $descricao;
-        return $this;
-    }
+    public function getQuantidadeItens(): int { return $this->quantidadeItens; }
+    public function setQuantidadeItens(int $quantidadeItens): static { $this->quantidadeItens = $quantidadeItens; return $this; }
 
-    public function getPreco(): float
-    {
-        return $this->preco;
-    }
-
-    public function setPreco(float $preco): static
-    {
-        $this->preco = $preco;
-        return $this;
-    }
-
-    public function getImagemUrl(): ?string
-    {
-        return $this->imagemUrl;
-    }
-
-    public function setImagemUrl(?string $imagemUrl): static
-    {
-        $this->imagemUrl = $imagemUrl;
-        return $this;
-    }
-
-    public function getQuantidadeItens(): int
-    {
-        return $this->quantidadeItens;
-    }
-
-    public function setQuantidadeItens(int $quantidadeItens): static
-    {
-        $this->quantidadeItens = $quantidadeItens;
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Produto>
-     */
-    public function getProdutos(): Collection
-    {
-        return $this->produtos;
-    }
+    /** @return Collection<int, Produto> */
+    public function getProdutos(): Collection { return $this->produtos; }
 
     public function addProduto(Produto $produto): static
     {
@@ -143,13 +84,8 @@ class Kit
         return $this;
     }
 
-    /**
-     * @return Collection<int, Categoria>
-     */
-    public function getCategorias(): Collection
-    {
-        return $this->categorias;
-    }
+    /** @return Collection<int, Categoria> */
+    public function getCategorias(): Collection { return $this->categorias; }
 
     public function addCategoria(Categoria $categoria): static
     {
@@ -165,32 +101,8 @@ class Kit
         return $this;
     }
 
-    public function isAtivo(): bool
-    {
-        return $this->ativo;
-    }
-
-    public function setAtivo(bool $ativo): static
-    {
-        $this->ativo = $ativo;
-        return $this;
-    }
-
-    public function getCreatedAt(): \DateTimeImmutable
-    {
-        return $this->createdAt;
-    }
-
-    public function getUpdatedAt(): ?\DateTimeImmutable
-    {
-        return $this->updatedAt;
-    }
-
-    public function touch(): static
-    {
-        $this->updatedAt = new \DateTimeImmutable();
-        return $this;
-    }
+    public function isAtivo(): bool { return $this->ativo; }
+    public function setAtivo(bool $ativo): static { $this->ativo = $ativo; return $this; }
 
     public function getCustoTotal(): float
     {
@@ -199,20 +111,5 @@ class Kit
             $total += $produto->getPrecoCusto();
         }
         return $total;
-    }
-
-    private function generateUuid(): string
-    {
-        return sprintf(
-            '%04x%04x-%04x-%04x-%04x-%04x%04x%04x',
-            random_int(0, 0xffff),
-            random_int(0, 0xffff),
-            random_int(0, 0xffff),
-            random_int(0, 0x0fff) | 0x4000,
-            random_int(0, 0x3fff) | 0x8000,
-            random_int(0, 0xffff),
-            random_int(0, 0xffff),
-            random_int(0, 0xffff)
-        );
     }
 }

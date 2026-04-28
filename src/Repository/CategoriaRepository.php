@@ -31,16 +31,4 @@ class CategoriaRepository extends ServiceEntityRepository
             $this->getEntityManager()->flush();
         }
     }
-
-    /**
-     * @return Categoria[]
-     */
-    public function findAllOrdenadas(): array
-    {
-        return $this->createQueryBuilder('c')
-            ->orderBy('c.ordem', 'ASC')
-            ->addOrderBy('c.nome', 'ASC')
-            ->getQuery()
-            ->getResult();
-    }
 }

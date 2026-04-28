@@ -41,11 +41,13 @@ class ClienteRepository extends ServiceEntityRepository
             ->getOneOrNullResult();
     }
 
-    public function findClientesAnonimizados(): array
+    public function findOneByUserId(string $userId): ?Cliente
     {
         return $this->createQueryBuilder('c')
-            ->andWhere('c.anonymizedAt IS NOT NULL')
+            ->join('c.user', 'u')
+            ->andWhere('u.id = :userId')
+            ->setParameter('userId', $userId)
             ->getQuery()
-            ->getResult();
+            ->getOneOrNullResult();
     }
 }

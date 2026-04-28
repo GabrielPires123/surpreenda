@@ -3,7 +3,6 @@
 namespace App\Repository;
 
 use App\Entity\Assinatura;
-use App\Enum\SubscriptionStatus;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -31,39 +30,5 @@ class AssinaturaRepository extends ServiceEntityRepository
         if ($flush) {
             $this->getEntityManager()->flush();
         }
-    }
-
-    /**
-     * @return Assinatura[]
-     */
-    public function findByStatus(SubscriptionStatus $status): array
-    {
-        return $this->createQueryBuilder('a')
-            ->andWhere('a.status = :status')
-            ->setParameter('status', $status->value)
-            ->getQuery()
-            ->getResult();
-    }
-
-    public function findAtivas(): array
-    {
-        return $this->findByStatus(SubscriptionStatus::ACTIVE);
-    }
-
-    /**
-     * Find assinaturas ativas cujo próximo envio está pendente.
-     *
-     * @return Assinatura[]
-     */
-    public function findPendentesEnvio(): array
-    {
-        return $this->createQueryBuilder('a')
-            ->andWhere('a.status = :status')
-            ->andWhere('a.dataProximoEnvio <= :now')
-            ->setParameter('status', SubscriptionStatus::ACTIVE->value)
-            ->setParameter('now', new \DateTimeImmutable())
-            ->orderBy('a.dataProximoEnvio', 'ASC')
-            ->getQuery()
-            ->getResult();
     }
 }

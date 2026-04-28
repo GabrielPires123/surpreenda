@@ -31,17 +31,4 @@ class KitRepository extends ServiceEntityRepository
             $this->getEntityManager()->flush();
         }
     }
-
-    /**
-     * @return Kit[]
-     */
-    public function findAtivos(): array
-    {
-        return $this->createQueryBuilder('k')
-            ->andWhere('k.ativo = :ativo')
-            ->setParameter('ativo', true)
-            ->orderBy('k.preco', 'ASC')
-            ->getQuery()
-            ->getResult();
-    }
 }

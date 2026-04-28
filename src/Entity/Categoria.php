@@ -12,9 +12,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Table(name: '`categoria`')]
 class Categoria
 {
-    #[ORM\Id]
-    #[ORM\Column(type: 'guid', unique: true)]
-    private string $id;
+    use UuidTrait;
 
     #[ORM\Column(length: 50, unique: true)]
     #[Assert\NotBlank(message: 'O nome da categoria é obrigatório.')]
@@ -40,67 +38,25 @@ class Categoria
 
     public function __construct()
     {
-        $this->id = $this->generateUuid();
+        $this->initUuid();
         $this->produtos = new ArrayCollection();
         $this->kits = new ArrayCollection();
     }
 
-    public function getId(): string
-    {
-        return $this->id;
-    }
+    public function getNome(): string { return $this->nome; }
+    public function setNome(string $nome): static { $this->nome = $nome; return $this; }
 
-    public function getNome(): string
-    {
-        return $this->nome;
-    }
+    public function getDescricao(): ?string { return $this->descricao; }
+    public function setDescricao(?string $descricao): static { $this->descricao = $descricao; return $this; }
 
-    public function setNome(string $nome): static
-    {
-        $this->nome = $nome;
-        return $this;
-    }
+    public function getIconeUrl(): ?string { return $this->iconeUrl; }
+    public function setIconeUrl(?string $iconeUrl): static { $this->iconeUrl = $iconeUrl; return $this; }
 
-    public function getDescricao(): ?string
-    {
-        return $this->descricao;
-    }
+    public function getOrdem(): int { return $this->ordem; }
+    public function setOrdem(int $ordem): static { $this->ordem = $ordem; return $this; }
 
-    public function setDescricao(?string $descricao): static
-    {
-        $this->descricao = $descricao;
-        return $this;
-    }
-
-    public function getIconeUrl(): ?string
-    {
-        return $this->iconeUrl;
-    }
-
-    public function setIconeUrl(?string $iconeUrl): static
-    {
-        $this->iconeUrl = $iconeUrl;
-        return $this;
-    }
-
-    public function getOrdem(): int
-    {
-        return $this->ordem;
-    }
-
-    public function setOrdem(int $ordem): static
-    {
-        $this->ordem = $ordem;
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Produto>
-     */
-    public function getProdutos(): Collection
-    {
-        return $this->produtos;
-    }
+    /** @return Collection<int, Produto> */
+    public function getProdutos(): Collection { return $this->produtos; }
 
     public function addProduto(Produto $produto): static
     {
@@ -117,13 +73,8 @@ class Categoria
         return $this;
     }
 
-    /**
-     * @return Collection<int, Kit>
-     */
-    public function getKits(): Collection
-    {
-        return $this->kits;
-    }
+    /** @return Collection<int, Kit> */
+    public function getKits(): Collection { return $this->kits; }
 
     public function addKit(Kit $kit): static
     {
@@ -138,20 +89,5 @@ class Categoria
     {
         $this->kits->removeElement($kit);
         return $this;
-    }
-
-    private function generateUuid(): string
-    {
-        return sprintf(
-            '%04x%04x-%04x-%04x-%04x-%04x%04x%04x',
-            random_int(0, 0xffff),
-            random_int(0, 0xffff),
-            random_int(0, 0xffff),
-            random_int(0, 0x0fff) | 0x4000,
-            random_int(0, 0x3fff) | 0x8000,
-            random_int(0, 0xffff),
-            random_int(0, 0xffff),
-            random_int(0, 0xffff)
-        );
     }
 }

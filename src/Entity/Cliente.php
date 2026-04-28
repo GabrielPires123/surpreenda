@@ -6,18 +6,15 @@ use App\Repository\ClienteRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: ClienteRepository::class)]
 #[ORM\Table(name: '`cliente`')]
 class Cliente
 {
-    #[ORM\Id]
-    #[ORM\Column(type: 'guid', unique: true)]
-    private string $id;
+    use UuidTrait;
+    use AnonymizableTrait;
 
     #[ORM\Column(length: 11, unique: true, nullable: true)]
-    #[Assert\Regex(pattern: '/^\d{11}$/', message: 'CPF inválido.')]
     private ?string $cpf = null;
 
     #[ORM\OneToOne(inversedBy: 'cliente', targetEntity: User::class)]
@@ -43,31 +40,16 @@ class Cliente
     #[ORM\OneToOne(targetEntity: Assinatura::class, mappedBy: 'cliente', cascade: ['persist', 'remove'])]
     private ?Assinatura $assinatura = null;
 
-    #[ORM\Column]
-    private \DateTimeImmutable $createdAt;
-
-    #[ORM\Column(nullable: true)]
-    private ?\DateTimeImmutable $anonymizedAt = null;
-
     public function __construct()
     {
-        $this->id = $this->generateUuid();
-        $this->createdAt = new \DateTimeImmutable();
+        $this->initUuid();
         $this->enderecos = new ArrayCollection();
         $this->telefones = new ArrayCollection();
         $this->pets = new ArrayCollection();
         $this->pedidos = new ArrayCollection();
     }
 
-    public function getId(): string
-    {
-        return $this->id;
-    }
-
-    public function getCpf(): ?string
-    {
-        return $this->cpf;
-    }
+    public function getCpf(): ?string { return $this->cpf; }
 
     public function setCpf(?string $cpf): static
     {
@@ -75,10 +57,7 @@ class Cliente
         return $this;
     }
 
-    public function getUser(): User
-    {
-        return $this->user;
-    }
+    public function getUser(): User { return $this->user; }
 
     public function setUser(User $user): static
     {
@@ -86,20 +65,13 @@ class Cliente
         return $this;
     }
 
-    /**
-     * @return Collection<int, Endereco>
-     */
-    public function getEnderecos(): Collection
-    {
-        return $this->enderecos;
-    }
+    /** @return Collection<int, Endereco> */
+    public function getEnderecos(): Collection { return $this->enderecos; }
 
     public function getEnderecoPrincipal(): ?Endereco
     {
         foreach ($this->enderecos as $endereco) {
-            if ($endereco->isPrincipal()) {
-                return $endereco;
-            }
+            if ($endereco->isPrincipal()) return $endereco;
         }
         return $this->enderecos->first() ?: null;
     }
@@ -123,13 +95,8 @@ class Cliente
         return $this;
     }
 
-    /**
-     * @return Collection<int, Telefone>
-     */
-    public function getTelefones(): Collection
-    {
-        return $this->telefones;
-    }
+    /** @return Collection<int, Telefone> */
+    public function getTelefones(): Collection { return $this->telefones; }
 
     public function addTelefone(Telefone $telefone): static
     {
@@ -146,13 +113,8 @@ class Cliente
         return $this;
     }
 
-    /**
-     * @return Collection<int, Pet>
-     */
-    public function getPets(): Collection
-    {
-        return $this->pets;
-    }
+    /** @return Collection<int, Pet> */
+    public function getPets(): Collection { return $this->pets; }
 
     public function addPet(Pet $pet): static
     {
@@ -169,13 +131,8 @@ class Cliente
         return $this;
     }
 
-    /**
-     * @return Collection<int, Pedido>
-     */
-    public function getPedidos(): Collection
-    {
-        return $this->pedidos;
-    }
+    /** @return Collection<int, Pedido> */
+    public function getPedidos(): Collection { return $this->pedidos; }
 
     public function addPedido(Pedido $pedido): static
     {
@@ -186,45 +143,11 @@ class Cliente
         return $this;
     }
 
-    public function getAssinatura(): ?Assinatura
-    {
-        return $this->assinatura;
-    }
+    public function getAssinatura(): ?Assinatura { return $this->assinatura; }
 
     public function setAssinatura(?Assinatura $assinatura): static
     {
         $this->assinatura = $assinatura;
         return $this;
-    }
-
-    public function getCreatedAt(): \DateTimeImmutable
-    {
-        return $this->createdAt;
-    }
-
-    public function getAnonymizedAt(): ?\DateTimeImmutable
-    {
-        return $this->anonymizedAt;
-    }
-
-    public function setAnonymizedAt(?\DateTimeImmutable $anonymizedAt): static
-    {
-        $this->anonymizedAt = $anonymizedAt;
-        return $this;
-    }
-
-    private function generateUuid(): string
-    {
-        return sprintf(
-            '%04x%04x-%04x-%04x-%04x-%04x%04x%04x',
-            random_int(0, 0xffff),
-            random_int(0, 0xffff),
-            random_int(0, 0xffff),
-            random_int(0, 0x0fff) | 0x4000,
-            random_int(0, 0x3fff) | 0x8000,
-            random_int(0, 0xffff),
-            random_int(0, 0xffff),
-            random_int(0, 0xffff)
-        );
     }
 }

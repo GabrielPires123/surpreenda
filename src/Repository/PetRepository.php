@@ -33,9 +33,7 @@ class PetRepository extends ServiceEntityRepository
         }
     }
 
-    /**
-     * @return Pet[]
-     */
+    /** @return Pet[] */
     public function findByTipo(PetType $tipo): array
     {
         return $this->createQueryBuilder('p')
@@ -45,9 +43,7 @@ class PetRepository extends ServiceEntityRepository
             ->getResult();
     }
 
-    /**
-     * @return Pet[]
-     */
+    /** @return Pet[] */
     public function findByClienteId(string $clienteId): array
     {
         return $this->createQueryBuilder('p')

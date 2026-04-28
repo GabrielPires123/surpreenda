@@ -10,9 +10,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Table(name: '`endereco`')]
 class Endereco
 {
-    #[ORM\Id]
-    #[ORM\Column(type: 'guid', unique: true)]
-    private string $id;
+    use UuidTrait;
 
     #[ORM\Column(length: 8)]
     #[Assert\NotBlank(message: 'O CEP é obrigatório.')]
@@ -52,112 +50,35 @@ class Endereco
 
     public function __construct()
     {
-        $this->id = $this->generateUuid();
+        $this->initUuid();
     }
 
-    public function getId(): string
-    {
-        return $this->id;
-    }
+    public function getCep(): string { return $this->cep; }
+    public function setCep(string $cep): static { $this->cep = preg_replace('/\D/', '', $cep); return $this; }
 
-    public function getCep(): string
-    {
-        return $this->cep;
-    }
+    public function getLogradouro(): string { return $this->logradouro; }
+    public function setLogradouro(string $logradouro): static { $this->logradouro = $logradouro; return $this; }
 
-    public function setCep(string $cep): static
-    {
-        $this->cep = str_replace('-', '', $cep);
-        return $this;
-    }
+    public function getNumero(): string { return $this->numero; }
+    public function setNumero(string $numero): static { $this->numero = $numero; return $this; }
 
-    public function getLogradouro(): string
-    {
-        return $this->logradouro;
-    }
+    public function getComplemento(): ?string { return $this->complemento; }
+    public function setComplemento(?string $complemento): static { $this->complemento = $complemento; return $this; }
 
-    public function setLogradouro(string $logradouro): static
-    {
-        $this->logradouro = $logradouro;
-        return $this;
-    }
+    public function getBairro(): string { return $this->bairro; }
+    public function setBairro(string $bairro): static { $this->bairro = $bairro; return $this; }
 
-    public function getNumero(): string
-    {
-        return $this->numero;
-    }
+    public function getCidade(): string { return $this->cidade; }
+    public function setCidade(string $cidade): static { $this->cidade = $cidade; return $this; }
 
-    public function setNumero(string $numero): static
-    {
-        $this->numero = $numero;
-        return $this;
-    }
+    public function getEstado(): string { return $this->estado; }
+    public function setEstado(string $estado): static { $this->estado = strtoupper($estado); return $this; }
 
-    public function getComplemento(): ?string
-    {
-        return $this->complemento;
-    }
+    public function getCliente(): Cliente { return $this->cliente; }
+    public function setCliente(Cliente $cliente): static { $this->cliente = $cliente; return $this; }
 
-    public function setComplemento(?string $complemento): static
-    {
-        $this->complemento = $complemento;
-        return $this;
-    }
-
-    public function getBairro(): string
-    {
-        return $this->bairro;
-    }
-
-    public function setBairro(string $bairro): static
-    {
-        $this->bairro = $bairro;
-        return $this;
-    }
-
-    public function getCidade(): string
-    {
-        return $this->cidade;
-    }
-
-    public function setCidade(string $cidade): static
-    {
-        $this->cidade = $cidade;
-        return $this;
-    }
-
-    public function getEstado(): string
-    {
-        return $this->estado;
-    }
-
-    public function setEstado(string $estado): static
-    {
-        $this->estado = strtoupper($estado);
-        return $this;
-    }
-
-    public function getCliente(): Cliente
-    {
-        return $this->cliente;
-    }
-
-    public function setCliente(Cliente $cliente): static
-    {
-        $this->cliente = $cliente;
-        return $this;
-    }
-
-    public function isPrincipal(): bool
-    {
-        return $this->isPrincipal;
-    }
-
-    public function setIsPrincipal(bool $isPrincipal): static
-    {
-        $this->isPrincipal = $isPrincipal;
-        return $this;
-    }
+    public function isPrincipal(): bool { return $this->isPrincipal; }
+    public function setIsPrincipal(bool $isPrincipal): static { $this->isPrincipal = $isPrincipal; return $this; }
 
     public function getFullAddress(): string
     {
@@ -169,21 +90,6 @@ class Endereco
             $this->bairro,
             $this->cidade,
             $this->estado
-        );
-    }
-
-    private function generateUuid(): string
-    {
-        return sprintf(
-            '%04x%04x-%04x-%04x-%04x-%04x%04x%04x',
-            random_int(0, 0xffff),
-            random_int(0, 0xffff),
-            random_int(0, 0xffff),
-            random_int(0, 0x0fff) | 0x4000,
-            random_int(0, 0x3fff) | 0x8000,
-            random_int(0, 0xffff),
-            random_int(0, 0xffff),
-            random_int(0, 0xffff)
         );
     }
 }

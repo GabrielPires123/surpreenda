@@ -31,32 +31,4 @@ class ProdutoRepository extends ServiceEntityRepository
             $this->getEntityManager()->flush();
         }
     }
-
-    /**
-     * @return Produto[]
-     */
-    public function findAtivos(): array
-    {
-        return $this->createQueryBuilder('p')
-            ->andWhere('p.ativo = :ativo')
-            ->setParameter('ativo', true)
-            ->orderBy('p.nome', 'ASC')
-            ->getQuery()
-            ->getResult();
-    }
-
-    /**
-     * @return Produto[]
-     */
-    public function findByCategoriaId(string $categoriaId): array
-    {
-        return $this->createQueryBuilder('p')
-            ->andWhere('p.categoria = :categoriaId')
-            ->andWhere('p.ativo = :ativo')
-            ->setParameter('categoriaId', $categoriaId)
-            ->setParameter('ativo', true)
-            ->orderBy('p.nome', 'ASC')
-            ->getQuery()
-            ->getResult();
-    }
 }

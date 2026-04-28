@@ -11,9 +11,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Table(name: '`assinatura`')]
 class Assinatura
 {
-    #[ORM\Id]
-    #[ORM\Column(type: 'guid', unique: true)]
-    private string $id;
+    use UuidTrait;
 
     #[ORM\OneToOne(inversedBy: 'assinatura', targetEntity: Cliente::class)]
     #[ORM\JoinColumn(nullable: false)]
@@ -46,156 +44,38 @@ class Assinatura
     #[ORM\Column]
     private int $renovacoes = 0;
 
-    #[ORM\Column]
-    private \DateTimeImmutable $createdAt;
-
-    #[ORM\Column(nullable: true)]
-    private ?\DateTimeImmutable $updatedAt = null;
-
     public function __construct()
     {
-        $this->id = $this->generateUuid();
-        $this->createdAt = new \DateTimeImmutable();
+        $this->initUuid();
         $this->status = SubscriptionStatus::ACTIVE;
     }
 
-    public function getId(): string
-    {
-        return $this->id;
-    }
+    public function getCliente(): Cliente { return $this->cliente; }
+    public function setCliente(Cliente $cliente): static { $this->cliente = $cliente; return $this; }
 
-    public function getCliente(): Cliente
-    {
-        return $this->cliente;
-    }
+    public function getStatus(): SubscriptionStatus { return $this->status; }
+    public function setStatus(SubscriptionStatus $status): static { $this->status = $status; return $this; }
 
-    public function setCliente(Cliente $cliente): static
-    {
-        $this->cliente = $cliente;
-        return $this;
-    }
+    public function getPlano(): string { return $this->plano; }
+    public function setPlano(string $plano): static { $this->plano = $plano; return $this; }
 
-    public function getStatus(): SubscriptionStatus
-    {
-        return $this->status;
-    }
+    public function getValor(): float { return $this->valor; }
+    public function setValor(float $valor): static { $this->valor = $valor; return $this; }
 
-    public function setStatus(SubscriptionStatus $status): static
-    {
-        $this->status = $status;
-        return $this;
-    }
+    public function getIntervaloDias(): int { return $this->intervaloDias; }
+    public function setIntervaloDias(int $intervaloDias): static { $this->intervaloDias = $intervaloDias; return $this; }
 
-    public function getPlano(): string
-    {
-        return $this->plano;
-    }
+    public function getDataInicio(): \DateTimeImmutable { return $this->dataInicio; }
+    public function setDataInicio(\DateTimeImmutable $dataInicio): static { $this->dataInicio = $dataInicio; return $this; }
 
-    public function setPlano(string $plano): static
-    {
-        $this->plano = $plano;
-        return $this;
-    }
+    public function getDataFim(): ?\DateTimeImmutable { return $this->dataFim; }
+    public function setDataFim(?\DateTimeImmutable $dataFim): static { $this->dataFim = $dataFim; return $this; }
 
-    public function getValor(): float
-    {
-        return $this->valor;
-    }
+    public function getDataProximoEnvio(): ?\DateTimeImmutable { return $this->dataProximoEnvio; }
+    public function setDataProximoEnvio(?\DateTimeImmutable $dataProximoEnvio): static { $this->dataProximoEnvio = $dataProximoEnvio; return $this; }
 
-    public function setValor(float $valor): static
-    {
-        $this->valor = $valor;
-        return $this;
-    }
+    public function getRenovacoes(): int { return $this->renovacoes; }
+    public function incrementarRenovacao(): static { $this->renovacoes++; return $this; }
 
-    public function getIntervaloDias(): int
-    {
-        return $this->intervaloDias;
-    }
-
-    public function setIntervaloDias(int $intervaloDias): static
-    {
-        $this->intervaloDias = $intervaloDias;
-        return $this;
-    }
-
-    public function getDataInicio(): \DateTimeImmutable
-    {
-        return $this->dataInicio;
-    }
-
-    public function setDataInicio(\DateTimeImmutable $dataInicio): static
-    {
-        $this->dataInicio = $dataInicio;
-        return $this;
-    }
-
-    public function getDataFim(): ?\DateTimeImmutable
-    {
-        return $this->dataFim;
-    }
-
-    public function setDataFim(?\DateTimeImmutable $dataFim): static
-    {
-        $this->dataFim = $dataFim;
-        return $this;
-    }
-
-    public function getDataProximoEnvio(): ?\DateTimeImmutable
-    {
-        return $this->dataProximoEnvio;
-    }
-
-    public function setDataProximoEnvio(?\DateTimeImmutable $dataProximoEnvio): static
-    {
-        $this->dataProximoEnvio = $dataProximoEnvio;
-        return $this;
-    }
-
-    public function getRenovacoes(): int
-    {
-        return $this->renovacoes;
-    }
-
-    public function incrementarRenovacao(): static
-    {
-        $this->renovacoes++;
-        return $this;
-    }
-
-    public function getCreatedAt(): \DateTimeImmutable
-    {
-        return $this->createdAt;
-    }
-
-    public function getUpdatedAt(): ?\DateTimeImmutable
-    {
-        return $this->updatedAt;
-    }
-
-    public function touch(): static
-    {
-        $this->updatedAt = new \DateTimeImmutable();
-        return $this;
-    }
-
-    public function isAtiva(): bool
-    {
-        return $this->status === SubscriptionStatus::ACTIVE;
-    }
-
-    private function generateUuid(): string
-    {
-        return sprintf(
-            '%04x%04x-%04x-%04x-%04x-%04x%04x%04x',
-            random_int(0, 0xffff),
-            random_int(0, 0xffff),
-            random_int(0, 0xffff),
-            random_int(0, 0x0fff) | 0x4000,
-            random_int(0, 0x3fff) | 0x8000,
-            random_int(0, 0xffff),
-            random_int(0, 0xffff),
-            random_int(0, 0xffff)
-        );
-    }
+    public function isAtiva(): bool { return $this->status === SubscriptionStatus::ACTIVE; }
 }

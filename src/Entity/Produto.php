@@ -12,9 +12,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Table(name: '`produto`')]
 class Produto
 {
-    #[ORM\Id]
-    #[ORM\Column(type: 'guid', unique: true)]
-    private string $id;
+    use UuidTrait;
 
     #[ORM\Column(length: 100)]
     #[Assert\NotBlank(message: 'O nome do produto é obrigatório.')]
@@ -25,7 +23,7 @@ class Produto
     private ?string $descricao = null;
 
     #[ORM\Column(type: 'float')]
-    #[Assert\PositiveOrZero(message: 'O preço não pode ser negativo.')]
+    #[Assert\PositiveOrZero(message: 'O preço de custo não pode ser negativo.')]
     private float $precoCusto;
 
     #[ORM\Column(type: 'float')]
@@ -49,116 +47,41 @@ class Produto
     #[ORM\Column]
     private bool $ativo = true;
 
-    #[ORM\Column]
-    private \DateTimeImmutable $createdAt;
-
-    #[ORM\Column(nullable: true)]
-    private ?\DateTimeImmutable $updatedAt = null;
-
     public function __construct()
     {
-        $this->id = $this->generateUuid();
-        $this->createdAt = new \DateTimeImmutable();
+        $this->initUuid();
         $this->kits = new ArrayCollection();
     }
 
-    public function getId(): string
-    {
-        return $this->id;
-    }
+    public function getNome(): string { return $this->nome; }
+    public function setNome(string $nome): static { $this->nome = $nome; return $this; }
 
-    public function getNome(): string
-    {
-        return $this->nome;
-    }
+    public function getDescricao(): ?string { return $this->descricao; }
+    public function setDescricao(?string $descricao): static { $this->descricao = $descricao; return $this; }
 
-    public function setNome(string $nome): static
-    {
-        $this->nome = $nome;
-        return $this;
-    }
+    public function getPrecoCusto(): float { return $this->precoCusto; }
+    public function setPrecoCusto(float $precoCusto): static { $this->precoCusto = $precoCusto; return $this; }
 
-    public function getDescricao(): ?string
-    {
-        return $this->descricao;
-    }
-
-    public function setDescricao(?string $descricao): static
-    {
-        $this->descricao = $descricao;
-        return $this;
-    }
-
-    public function getPrecoCusto(): float
-    {
-        return $this->precoCusto;
-    }
-
-    public function setPrecoCusto(float $precoCusto): static
-    {
-        $this->precoCusto = $precoCusto;
-        return $this;
-    }
-
-    public function getPrecoVenda(): float
-    {
-        return $this->precoVenda;
-    }
-
-    public function setPrecoVenda(float $precoVenda): static
-    {
-        $this->precoVenda = $precoVenda;
-        return $this;
-    }
+    public function getPrecoVenda(): float { return $this->precoVenda; }
+    public function setPrecoVenda(float $precoVenda): static { $this->precoVenda = $precoVenda; return $this; }
 
     public function getMargemLucro(): float
     {
-        if ($this->precoCusto <= 0) {
-            return 0.0;
-        }
+        if ($this->precoCusto <= 0) return 0.0;
         return ($this->precoVenda - $this->precoCusto) / $this->precoCusto * 100;
     }
 
-    public function getEstoque(): int
-    {
-        return $this->estoque;
-    }
+    public function getEstoque(): int { return $this->estoque; }
+    public function setEstoque(int $estoque): static { $this->estoque = $estoque; return $this; }
 
-    public function setEstoque(int $estoque): static
-    {
-        $this->estoque = $estoque;
-        return $this;
-    }
+    public function getImagemUrl(): ?string { return $this->imagemUrl; }
+    public function setImagemUrl(?string $imagemUrl): static { $this->imagemUrl = $imagemUrl; return $this; }
 
-    public function getImagemUrl(): ?string
-    {
-        return $this->imagemUrl;
-    }
+    public function getCategoria(): Categoria { return $this->categoria; }
+    public function setCategoria(Categoria $categoria): static { $this->categoria = $categoria; return $this; }
 
-    public function setImagemUrl(?string $imagemUrl): static
-    {
-        $this->imagemUrl = $imagemUrl;
-        return $this;
-    }
-
-    public function getCategoria(): Categoria
-    {
-        return $this->categoria;
-    }
-
-    public function setCategoria(Categoria $categoria): static
-    {
-        $this->categoria = $categoria;
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Kit>
-     */
-    public function getKits(): Collection
-    {
-        return $this->kits;
-    }
+    /** @return Collection<int, Kit> */
+    public function getKits(): Collection { return $this->kits; }
 
     public function addKit(Kit $kit): static
     {
@@ -175,45 +98,6 @@ class Produto
         return $this;
     }
 
-    public function isAtivo(): bool
-    {
-        return $this->ativo;
-    }
-
-    public function setAtivo(bool $ativo): static
-    {
-        $this->ativo = $ativo;
-        return $this;
-    }
-
-    public function getCreatedAt(): \DateTimeImmutable
-    {
-        return $this->createdAt;
-    }
-
-    public function getUpdatedAt(): ?\DateTimeImmutable
-    {
-        return $this->updatedAt;
-    }
-
-    public function touch(): static
-    {
-        $this->updatedAt = new \DateTimeImmutable();
-        return $this;
-    }
-
-    private function generateUuid(): string
-    {
-        return sprintf(
-            '%04x%04x-%04x-%04x-%04x-%04x%04x%04x',
-            random_int(0, 0xffff),
-            random_int(0, 0xffff),
-            random_int(0, 0xffff),
-            random_int(0, 0x0fff) | 0x4000,
-            random_int(0, 0x3fff) | 0x8000,
-            random_int(0, 0xffff),
-            random_int(0, 0xffff),
-            random_int(0, 0xffff)
-        );
-    }
+    public function isAtivo(): bool { return $this->ativo; }
+    public function setAtivo(bool $ativo): static { $this->ativo = $ativo; return $this; }
 }
