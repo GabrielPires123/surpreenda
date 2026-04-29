@@ -2,27 +2,20 @@
 
 namespace App\Entity;
 
+use App\Entity\Trait\UuidTrait;
 use App\Repository\UserRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: '`user`')]
-#[UniqueEntity(fields: ['email'], message: 'Já existe uma conta com este e-mail.')]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     use UuidTrait;
-    use AnonymizableTrait;
 
-    #[ORM\Column(length: 180, unique: true)]
+    #[ORM\Column(length: 100, unique: true)]
     private string $email;
-
-    #[ORM\Column]
-    private array $roles = [];
 
     #[ORM\Column]
     private string $password;
@@ -33,31 +26,20 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 50)]
     private string $lastName;
 
-    #[ORM\Column]
-    private bool $isVerified = false;
-
-    #[ORM\OneToOne(targetEntity: Cliente::class, mappedBy: 'user', cascade: ['persist', 'remove'])]
+    #[ORM\OneToOne(mappedBy: 'user', targetEntity: Cliente::class)]
     private ?Cliente $cliente = null;
+
+    #[ORM\Column]
+    private array $roles = [];
 
     public function __construct()
     {
         $this->initUuid();
     }
 
-    public function getEmail(): string
-    {
-        return $this->email;
-    }
-
-    public function setEmail(string $email): static
-    {
-        $this->email = $email;
-        return $this;
-    }
-
     public function getUserIdentifier(): string
     {
-        return (string) $this->email;
+        return $this->email;
     }
 
     public function getRoles(): array
@@ -88,6 +70,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
     }
 
+    public function getEmail(): string
+    {
+        return $this->email;
+    }
+
+    public function setEmail(string $email): static
+    {
+        $this->email = $email;
+        return $this;
+    }
+
     public function getFirstName(): string
     {
         return $this->firstName;
@@ -110,22 +103,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getFullName(): string
-    {
-        return $this->firstName . ' ' . $this->lastName;
-    }
-
-    public function isVerified(): bool
-    {
-        return $this->isVerified;
-    }
-
-    public function setVerified(bool $isVerified): static
-    {
-        $this->isVerified = $isVerified;
-        return $this;
-    }
-
     public function getCliente(): ?Cliente
     {
         return $this->cliente;
@@ -133,13 +110,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function setCliente(?Cliente $cliente): static
     {
-        if ($cliente === null && $this->cliente !== null) {
-            $this->cliente->setUser(null);
-        }
-        if ($cliente !== null && $cliente->getUser() !== $this) {
-            $cliente->setUser($this);
-        }
         $this->cliente = $cliente;
         return $this;
+    }
+
+    public function getFullName(): string
+    {
+        return $this->firstName . ' ' . $this->lastName;
     }
 }

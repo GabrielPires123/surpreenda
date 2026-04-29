@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use App\Entity\Trait\AnonymizableTrait;
+use App\Entity\Trait\UuidTrait;
 use App\Repository\ClienteRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -49,15 +51,21 @@ class Cliente
         $this->pedidos = new ArrayCollection();
     }
 
-    public function getCpf(): ?string { return $this->cpf; }
+    public function getCpf(): ?string
+    {
+        return $this->cpf;
+    }
 
     public function setCpf(?string $cpf): static
     {
-        $this->cpf = preg_replace('/\D/', '', $cpf);
+        $this->cpf = $cpf;
         return $this;
     }
 
-    public function getUser(): User { return $this->user; }
+    public function getUser(): User
+    {
+        return $this->user;
+    }
 
     public function setUser(User $user): static
     {
@@ -65,15 +73,11 @@ class Cliente
         return $this;
     }
 
-    /** @return Collection<int, Endereco> */
-    public function getEnderecos(): Collection { return $this->enderecos; }
-
-    public function getEnderecoPrincipal(): ?Endereco
+    /** @return Collection<int, Endereco> }
+    */
+    public function getEnderecos(): Collection
     {
-        foreach ($this->enderecos as $endereco) {
-            if ($endereco->isPrincipal()) return $endereco;
-        }
-        return $this->enderecos->first() ?: null;
+        return $this->enderecos;
     }
 
     public function addEndereco(Endereco $endereco): static
@@ -95,8 +99,21 @@ class Cliente
         return $this;
     }
 
+    public function getEnderecoPrincipal(): ?Endereco
+    {
+        foreach ($this->enderecos as $endereco) {
+            if ($endereco->isPrincipal()) {
+                return $endereco;
+            }
+        }
+        return $this->enderecos->first() ?: null;
+    }
+
     /** @return Collection<int, Telefone> */
-    public function getTelefones(): Collection { return $this->telefones; }
+    public function getTelefones(): Collection
+    {
+        return $this->telefones;
+    }
 
     public function addTelefone(Telefone $telefone): static
     {
@@ -109,12 +126,19 @@ class Cliente
 
     public function removeTelefone(Telefone $telefone): static
     {
-        $this->telefones->removeElement($telefone);
+        if ($this->telefones->removeElement($telefone)) {
+            if ($telefone->getCliente() === $this) {
+                $telefone->setCliente(null);
+            }
+        }
         return $this;
     }
 
     /** @return Collection<int, Pet> */
-    public function getPets(): Collection { return $this->pets; }
+    public function getPets(): Collection
+    {
+        return $this->pets;
+    }
 
     public function addPet(Pet $pet): static
     {
@@ -127,12 +151,19 @@ class Cliente
 
     public function removePet(Pet $pet): static
     {
-        $this->pets->removeElement($pet);
+        if ($this->pets->removeElement($pet)) {
+            if ($pet->getCliente() === $this) {
+                $pet->setCliente(null);
+            }
+        }
         return $this;
     }
 
     /** @return Collection<int, Pedido> */
-    public function getPedidos(): Collection { return $this->pedidos; }
+    public function getPedidos(): Collection
+    {
+        return $this->pedidos;
+    }
 
     public function addPedido(Pedido $pedido): static
     {
@@ -143,11 +174,34 @@ class Cliente
         return $this;
     }
 
-    public function getAssinatura(): ?Assinatura { return $this->assinatura; }
+    public function removePedido(Pedido $pedido): static
+    {
+        if ($this->pedidos->removeElement($pedido)) {
+            if ($pedido->getCliente() === $this) {
+                $pedido->setCliente(null);
+            }
+        }
+        return $this;
+    }
+
+    public function getAssinatura(): ?Assinatura
+    {
+        return $this->assinatura;
+    }
 
     public function setAssinatura(?Assinatura $assinatura): static
     {
         $this->assinatura = $assinatura;
         return $this;
+    }
+
+    public function getPrimeiroNome(): string
+    {
+        return explode(' ', $this->user->getFirstName())[0];
+    }
+
+    public function getNomeCompleto(): string
+    {
+        return trim($this->user->getFirstName() . ' ' . $this->user->getLastName());
     }
 }

@@ -2,11 +2,11 @@
 
 namespace App\Entity;
 
+use App\Entity\Trait\UuidTrait;
 use App\Repository\KitRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: KitRepository::class)]
 #[ORM\Table(name: '`kit`')]
@@ -15,15 +15,12 @@ class Kit
     use UuidTrait;
 
     #[ORM\Column(length: 100)]
-    #[Assert\NotBlank(message: 'O nome do kit é obrigatório.')]
-    #[Assert\Length(min: 3, max: 100)]
     private string $nome;
 
     #[ORM\Column(length: 500, nullable: true)]
     private ?string $descricao = null;
 
     #[ORM\Column(type: 'float')]
-    #[Assert\Positive(message: 'O preço deve ser positivo.')]
     private float $preco;
 
     #[ORM\Column(length: 255, nullable: true)]
@@ -52,23 +49,66 @@ class Kit
         $this->categorias = new ArrayCollection();
     }
 
-    public function getNome(): string { return $this->nome; }
-    public function setNome(string $nome): static { $this->nome = $nome; return $this; }
+    public function getNome(): string
+    {
+        return $this->nome;
+    }
 
-    public function getDescricao(): ?string { return $this->descricao; }
-    public function setDescricao(?string $descricao): static { $this->descricao = $descricao; return $this; }
+    public function setNome(string $nome): static
+    {
+        $this->nome = $nome;
+        return $this;
+    }
 
-    public function getPreco(): float { return $this->preco; }
-    public function setPreco(float $preco): static { $this->preco = $preco; return $this; }
+    public function getDescricao(): ?string
+    {
+        return $this->descricao;
+    }
 
-    public function getImagemUrl(): ?string { return $this->imagemUrl; }
-    public function setImagemUrl(?string $imagemUrl): static { $this->imagemUrl = $imagemUrl; return $this; }
+    public function setDescricao(?string $descricao): static
+    {
+        $this->descricao = $descricao;
+        return $this;
+    }
 
-    public function getQuantidadeItens(): int { return $this->quantidadeItens; }
-    public function setQuantidadeItens(int $quantidadeItens): static { $this->quantidadeItens = $quantidadeItens; return $this; }
+    public function getPreco(): float
+    {
+        return $this->preco;
+    }
+
+    public function setPreco(float $preco): static
+    {
+        $this->preco = $preco;
+        return $this;
+    }
+
+    public function getImagemUrl(): ?string
+    {
+        return $this->imagemUrl;
+    }
+
+    public function setImagemUrl(?string $imagemUrl): static
+    {
+        $this->imagemUrl = $imagemUrl;
+        return $this;
+    }
+
+    public function getQuantidadeItens(): int
+    {
+        return $this->quantidadeItens;
+    }
+
+    public function setQuantidadeItens(int $quantidadeItens): static
+    {
+        $this->quantidadeItens = $quantidadeItens;
+        return $this;
+    }
 
     /** @return Collection<int, Produto> */
-    public function getProdutos(): Collection { return $this->produtos; }
+    public function getProdutos(): Collection
+    {
+        return $this->produtos;
+    }
 
     public function addProduto(Produto $produto): static
     {
@@ -85,7 +125,10 @@ class Kit
     }
 
     /** @return Collection<int, Categoria> */
-    public function getCategorias(): Collection { return $this->categorias; }
+    public function getCategorias(): Collection
+    {
+        return $this->categorias;
+    }
 
     public function addCategoria(Categoria $categoria): static
     {
@@ -101,15 +144,19 @@ class Kit
         return $this;
     }
 
-    public function isAtivo(): bool { return $this->ativo; }
-    public function setAtivo(bool $ativo): static { $this->ativo = $ativo; return $this; }
-
-    public function getCustoTotal(): float
+    public function isAtivo(): bool
     {
-        $total = 0.0;
-        foreach ($this->produtos as $produto) {
-            $total += $produto->getPrecoCusto();
-        }
-        return $total;
+        return $this->ativo;
+    }
+
+    public function setAtivo(bool $ativo): static
+    {
+        $this->ativo = $ativo;
+        return $this;
+    }
+
+    public function __toString(): string
+    {
+        return $this->nome;
     }
 }

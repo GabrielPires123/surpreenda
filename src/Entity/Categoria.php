@@ -2,11 +2,11 @@
 
 namespace App\Entity;
 
+use App\Entity\Trait\UuidTrait;
 use App\Repository\CategoriaRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: CategoriaRepository::class)]
 #[ORM\Table(name: '`categoria`')]
@@ -15,8 +15,6 @@ class Categoria
     use UuidTrait;
 
     #[ORM\Column(length: 50, unique: true)]
-    #[Assert\NotBlank(message: 'O nome da categoria é obrigatório.')]
-    #[Assert\Length(min: 3, max: 50)]
     private string $nome;
 
     #[ORM\Column(length: 255, nullable: true)]
@@ -43,20 +41,55 @@ class Categoria
         $this->kits = new ArrayCollection();
     }
 
-    public function getNome(): string { return $this->nome; }
-    public function setNome(string $nome): static { $this->nome = $nome; return $this; }
+    public function getNome(): string
+    {
+        return $this->nome;
+    }
 
-    public function getDescricao(): ?string { return $this->descricao; }
-    public function setDescricao(?string $descricao): static { $this->descricao = $descricao; return $this; }
+    public function setNome(string $nome): static
+    {
+        $this->nome = $nome;
+        return $this;
+    }
 
-    public function getIconeUrl(): ?string { return $this->iconeUrl; }
-    public function setIconeUrl(?string $iconeUrl): static { $this->iconeUrl = $iconeUrl; return $this; }
+    public function getDescricao(): ?string
+    {
+        return $this->descricao;
+    }
 
-    public function getOrdem(): int { return $this->ordem; }
-    public function setOrdem(int $ordem): static { $this->ordem = $ordem; return $this; }
+    public function setDescricao(?string $descricao): static
+    {
+        $this->descricao = $descricao;
+        return $this;
+    }
+
+    public function getIconeUrl(): ?string
+    {
+        return $this->iconeUrl;
+    }
+
+    public function setIconeUrl(?string $iconeUrl): static
+    {
+        $this->iconeUrl = $iconeUrl;
+        return $this;
+    }
+
+    public function getOrdem(): int
+    {
+        return $this->ordem;
+    }
+
+    public function setOrdem(int $ordem): static
+    {
+        $this->ordem = $ordem;
+        return $this;
+    }
 
     /** @return Collection<int, Produto> */
-    public function getProdutos(): Collection { return $this->produtos; }
+    public function getProdutos(): Collection
+    {
+        return $this->produtos;
+    }
 
     public function addProduto(Produto $produto): static
     {
@@ -69,18 +102,24 @@ class Categoria
 
     public function removeProduto(Produto $produto): static
     {
-        $this->produtos->removeElement($produto);
+        if ($this->produtos->removeElement($produto)) {
+            if ($produto->getCategoria() === $this) {
+                $produto->setCategoria(null);
+            }
+        }
         return $this;
     }
 
     /** @return Collection<int, Kit> */
-    public function getKits(): Collection { return $this->kits; }
+    public function getKits(): Collection
+    {
+        return $this->kits;
+    }
 
     public function addKit(Kit $kit): static
     {
         if (!$this->kits->contains($kit)) {
             $this->kits->add($kit);
-            $kit->addCategoria($this);
         }
         return $this;
     }
@@ -89,5 +128,10 @@ class Categoria
     {
         $this->kits->removeElement($kit);
         return $this;
+    }
+
+    public function __toString(): string
+    {
+        return $this->nome;
     }
 }
