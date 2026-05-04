@@ -16,7 +16,7 @@ trait UuidTrait
     #[ORM\Column(type: 'datetime_immutable', nullable: true)]
     private ?\DateTimeImmutable $updatedAt = null;
 
-    protected function initUuid(): void
+    public function initUuid(): void
     {
         $this->id = $this->generateUuid();
         $this->createdAt = new \DateTimeImmutable();
