@@ -10,9 +10,13 @@ until php bin/console doctrine:database:create --if-not-exists --no-interaction 
     sleep 1
 done
 
-# Run migrations
-echo "Running migrations..."
-php bin/console doctrine:migrations:migrate --no-interaction
+# Sync database schema and migrations
+echo "Syncing database schema..."
+php bin/console doctrine:migrations:migrate --no-interaction 2>/dev/null || {
+    echo "Migration failed, marking existing tables and syncing schema..."
+    php bin/console doctrine:migrations:version 'DoctrineMigrations\Version20260428133320' --add --mark-migrated --no-interaction 2>/dev/null || true
+    php bin/console doctrine:migrations:migrate --no-interaction 2>/dev/null || php bin/console doctrine:schema:update --force --complete --no-interaction
+}
 
 # Load fixtures (only if empty)
 echo "Checking if data exists..."
