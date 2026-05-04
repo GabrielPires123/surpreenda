@@ -1,6 +1,8 @@
 <?php
 
-namespace App\Controller;
+declare(strict_types=1);
+
+namespace App\Controller\Backend;
 
 use App\Dto\Request\PetRequest;
 use App\Dto\Response\PetResponse;
@@ -61,58 +63,44 @@ class PetController extends AbstractController
 
         /** @var User $user */
         $user = $this->getUser();
-
-        try {
-            $pet = $this->petService->createPet(
-                $user->getId(),
-                $dto->nome,
-                $dto->tipo,
-                $dto->raca,
-                $dto->peso,
-                new \DateTimeImmutable($dto->dataNascimento)
-            );
-        } catch (\InvalidArgumentException $e) {
-            return new JsonResponse(['error' => $e->getMessage()], Response::HTTP_NOT_FOUND);
-        } catch (\DomainException $e) {
-            return new JsonResponse(['error' => $e->getMessage()], Response::HTTP_UNPROCESSABLE_ENTITY);
-        }
+        $pet = $this->petService->registerPetByUser($user->getId(), $dto);
 
         return new JsonResponse(PetResponse::fromEntity($pet), Response::HTTP_CREATED);
     }
 
     #[Route('/{id}', methods: ['PUT'], name: 'update')]
-    public function update(Request $request, string $id): JsonResponse
+    public function update(string $id, Request $request): JsonResponse
     {
-        $pet = $this->petService->getPetById($id);
-        if ($pet === null) {
-            return new JsonResponse(['error' => 'Pet não encontrado.'], Response::HTTP_NOT_FOUND);
+        try {
+            $pet = $this->petService->getPetById($id);
+        } catch (\InvalidArgumentException $e) {
+            return new JsonResponse(['error' => $e->getMessage()], Response::HTTP_NOT_FOUND);
         }
 
         $this->denyAccessUnlessGranted('EDIT', $pet);
 
-        $data = json_decode($request->getContent(), true);
-
         try {
-            $pet = $this->petService->updatePet($id, $data);
-        } catch (\InvalidArgumentException $e) {
+            $updatedPet = $this->petService->updatePet($pet, $request);
+        } catch (\DomainException $e) {
             return new JsonResponse(['error' => $e->getMessage()], Response::HTTP_UNPROCESSABLE_ENTITY);
         }
 
-        return new JsonResponse(PetResponse::fromEntity($pet));
+        return new JsonResponse(PetResponse::fromEntity($updatedPet));
     }
 
     #[Route('/{id}', methods: ['DELETE'], name: 'delete')]
     public function delete(string $id): JsonResponse
     {
-        $pet = $this->petService->getPetById($id);
-        if ($pet === null) {
-            return new JsonResponse(['error' => 'Pet não encontrado.'], Response::HTTP_NOT_FOUND);
+        try {
+            $pet = $this->petService->getPetById($id);
+        } catch (\InvalidArgumentException $e) {
+            return new JsonResponse(['error' => $e->getMessage()], Response::HTTP_NOT_FOUND);
         }
 
-        $this->denyAccessUnlessGranted('DELETE', $pet);
+        $this->denyAccessUnlessGranted('EDIT', $pet);
 
-        $this->petService->deletePet($id);
+        $this->petService->deletePet($pet);
 
-        return new JsonResponse(['message' => 'Pet excluído com sucesso.']);
+        return new JsonResponse(null, Response::HTTP_NO_CONTENT);
     }
 }

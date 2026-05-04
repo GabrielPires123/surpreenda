@@ -1,6 +1,8 @@
 <?php
 
-namespace App\Controller;
+declare(strict_types=1);
+
+namespace App\Controller\Backend;
 
 use App\Dto\Request\LoginRequest;
 use App\Dto\Request\RegisterRequest;

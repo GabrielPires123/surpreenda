@@ -1,6 +1,8 @@
 <?php
 
-namespace App\Controller;
+declare(strict_types=1);
+
+namespace App\Controller\Backend;
 
 use App\Dto\Response\PedidoResponse;
 use App\Entity\User;
@@ -58,10 +60,10 @@ class PedidoController extends AbstractController
             return new JsonResponse(['error' => $e->getMessage()], Response::HTTP_NOT_FOUND);
         }
 
-        $this->denyAccessUnlessGranted('CANCEL', $pedido);
+        $this->denyAccessUnlessGranted('EDIT', $pedido);
 
         try {
-            $pedido = $this->pedidoService->cancelarPedido($id);
+            $this->pedidoService->cancelar($pedido);
         } catch (\DomainException $e) {
             return new JsonResponse(['error' => $e->getMessage()], Response::HTTP_UNPROCESSABLE_ENTITY);
         }
@@ -73,20 +75,13 @@ class PedidoController extends AbstractController
     public function track(string $id): JsonResponse
     {
         try {
-            $pedido = $this->pedidoService->trackPedido($id);
+            $pedido = $this->pedidoService->getPedidoOrThrow($id);
         } catch (\InvalidArgumentException $e) {
             return new JsonResponse(['error' => $e->getMessage()], Response::HTTP_NOT_FOUND);
         }
 
         $this->denyAccessUnlessGranted('VIEW', $pedido);
 
-        return new JsonResponse([
-            'id' => $pedido->getId(),
-            'status' => $pedido->getStatus()->value,
-            'dataPedido' => $pedido->getDataPedido()->format('Y-m-d H:i:s'),
-            'dataEntregaEstimada' => $pedido->getDataEntregaEstimada()?->format('Y-m-d H:i:s'),
-            'kit' => $pedido->getKit()?->getNome(),
-            'pet' => $pedido->getPet()?->getNome(),
-        ]);
+        return new JsonResponse(['status' => $pedido->getStatus()->value]);
     }
 }
