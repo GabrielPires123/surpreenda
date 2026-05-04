@@ -8,10 +8,11 @@ use App\Entity\Telefone;
 use App\Entity\User;
 use App\Repository\Interface\ClienteRepositoryInterface;
 use App\Repository\Interface\UserRepositoryInterface;
+use App\Service\Interface\AuthServiceInterface;
 use App\Validator\EntityValidator;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
-class AuthService
+class AuthService implements AuthServiceInterface
 {
     public function __construct(
         private readonly UserRepositoryInterface $userRepository,

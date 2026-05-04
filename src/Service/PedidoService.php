@@ -12,9 +12,10 @@ use App\Enum\SubscriptionStatus;
 use App\Repository\Interface\AssinaturaRepositoryInterface;
 use App\Repository\Interface\ClienteRepositoryInterface;
 use App\Repository\Interface\PedidoRepositoryInterface;
+use App\Service\Interface\PedidoServiceInterface;
 use App\Validator\EntityValidator;
 
-class PedidoService
+class PedidoService implements PedidoServiceInterface
 {
     public function __construct(
         private readonly PedidoRepositoryInterface $pedidoRepository,

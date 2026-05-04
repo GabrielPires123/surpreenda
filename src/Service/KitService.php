@@ -5,8 +5,9 @@ namespace App\Service;
 use App\Entity\Kit;
 use App\Entity\Produto;
 use App\Repository\Interface\KitRepositoryInterface;
+use App\Service\Interface\KitServiceInterface;
 
-class KitService
+class KitService implements KitServiceInterface
 {
     public function __construct(
         private readonly KitRepositoryInterface $kitRepository,

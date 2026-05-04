@@ -9,9 +9,10 @@ use App\Entity\User;
 use App\Repository\Interface\ClienteRepositoryInterface;
 use App\Repository\Interface\EnderecoRepositoryInterface;
 use App\Repository\Interface\TelefoneRepositoryInterface;
+use App\Service\Interface\ClienteServiceInterface;
 use App\Validator\EntityValidator;
 
-class ClienteService
+class ClienteService implements ClienteServiceInterface
 {
     public function __construct(
         private readonly ClienteRepositoryInterface $clienteRepository,

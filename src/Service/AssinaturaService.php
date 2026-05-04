@@ -8,8 +8,9 @@ use App\Entity\Pedido;
 use App\Enum\SubscriptionStatus;
 use App\Repository\Interface\AssinaturaRepositoryInterface;
 use App\Repository\Interface\ClienteRepositoryInterface;
+use App\Service\Interface\AssinaturaServiceInterface;
 
-class AssinaturaService
+class AssinaturaService implements AssinaturaServiceInterface
 {
     public function __construct(
         private readonly AssinaturaRepositoryInterface $assinaturaRepository,

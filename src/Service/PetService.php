@@ -7,9 +7,10 @@ use App\Entity\Pet;
 use App\Entity\Cliente;
 use App\Repository\Interface\ClienteRepositoryInterface;
 use App\Repository\Interface\PetRepositoryInterface;
+use App\Service\Interface\PetServiceInterface;
 use App\Validator\EntityValidator;
 
-class PetService
+class PetService implements PetServiceInterface
 {
     public function __construct(
         private readonly PetRepositoryInterface $petRepository,
