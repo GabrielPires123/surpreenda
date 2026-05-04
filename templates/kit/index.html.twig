@@ -1,0 +1,46 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Kits - Surpreenda Pet{% endblock %}
+
+{% block stylesheets %}
+<link rel="stylesheet" href="{{ asset('styles/kit/kit.css') }}">
+{% endblock %}
+
+{% block body %}
+<div class="kit-page">
+    <h1 class="page-title">Nossos Kits</h1>
+    <p class="page-subtitle">Escolha o kit perfeito para o seu pet</p>
+
+    {% if kits is empty %}
+        <p class="no-data">Nenhum kit disponível no momento.</p>
+    {% else %}
+        <div class="kit-grid">
+            {% for kit in kits %}
+                <div class="kit-card">
+                    <div class="kit-image-wrapper">
+                        {% if kit.imagemUrl %}
+                            <img src="{{ asset(kit.imagemUrl) }}" alt="{{ kit.nome }}" class="kit-main-image">
+                        {% else %}
+                            <img src="{{ asset('3f8d2b61c81f6a1fb9deb8627ce294df1a516f9e.jpg') }}" alt="{{ kit.nome }}" class="kit-main-image">
+                        {% endif %}
+                    </div>
+                    <div class="kit-info">
+                        <h3 class="kit-name">{{ kit.nome }}</h3>
+                        {% if kit.descricao %}
+                            <p class="kit-description">{{ kit.descricao|slice(0, 100) }}{% if kit.descricao|length > 100 %}...{% endif %}</p>
+                        {% endif %}
+                        <div class="kit-meta">
+                            <span class="kit-items-count">{{ kit.quantidadeItens }} itens</span>
+                            <span class="kit-price">R$ {{ kit.preco|number_format(2, ',', '.') }}</span>
+                        </div>
+                        <div class="kit-actions">
+                            <a href="{{ path('kit_show', {id: kit.id}) }}" class="btn-secondary">Ver detalhes</a>
+                            <a href="{{ path('carrinho_adicionar', {kitId: kit.id}) }}" class="btn-primary">Adicionar ao carrinho</a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

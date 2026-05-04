@@ -1,0 +1,64 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Carrinho - Surpreenda Pet{% endblock %}
+
+{% block stylesheets %}
+<link rel="stylesheet" href="{{ asset('styles/carrinho/carrinho.css') }}">
+{% endblock %}
+
+{% block body %}
+<div class="carrinho-page">
+    <h1 class="page-title">Seu Carrinho</h1>
+
+    {% for msg in app.flashes('success') %}
+        <div class="flash-success">{{ msg }}</div>
+    {% endfor %}
+    {% for msg in app.flashes('error') %}
+        <div class="flash-error">{{ msg }}</div>
+    {% endfor %}
+
+    {% if itens is empty %}
+        <p class="carrinho-empty">Seu carrinho está vazio.</p>
+        <a href="{{ path('kit_index') }}" class="btn-primary">Ver Kits</a>
+    {% else %}
+        <div class="carrinho-items">
+            {% for kitId, quantidade in itens %}
+                {% set kit = source('carrinho_item', kitId) %}
+                <div class="carrinho-item">
+                    <div class="carrinho-item-info">
+                        {% if kit.imagemUrl %}
+                            <img src="{{ asset(kit.imagemUrl) }}" alt="{{ kit.nome }}" class="carrinho-item-image">
+                        {% else %}
+                            <img src="{{ asset('3f8d2b61c81f6a1fb9deb8627ce294df1a516f9e.jpg') }}" alt="{{ kit.nome }}" class="carrinho-item-image">
+                        {% endif %}
+                        <div class="carrinho-item-details">
+                            <h3 class="carrinho-item-name">{{ kit.nome }}</h3>
+                            <p class="carrinho-item-description">{{ kit.descricao|slice(0, 80) }}{% if kit.descricao|length > 80 %}...{% endif %}</p>
+                        </div>
+                    </div>
+                    <div class="carrinho-item-actions">
+                        <form action="{{ path('carrinho_atualizar', {kitId: kit.id}) }}" method="POST" class="carrinho-item-qty">
+                            <input type="number" name="quantidade" value="{{ quantidade }}" min="1" class="qty-input">
+                            <button type="submit" class="btn-update">Atualizar</button>
+                        </form>
+                        <span class="carrinho-item-price">R$ {{ (kit.preco * quantidade)|number_format(2, ',', '.') }}</span>
+                        <a href="{{ path('carrinho_remover', {kitId: kit.id}) }}" class="btn-remove">Remover</a>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+
+        <div class="carrinho-summary">
+            <div class="carrinho-total">
+                <strong>Total:</strong> R$ {{ total|number_format(2, ',', '.') }}
+            </div>
+            <div class="carrinho-actions">
+                <form action="{{ path('carrinho_limpar') }}" method="POST">
+                    <button type="submit" class="btn-clear">Limpar Carrinho</button>
+                </form>
+                <a href="{{ path('kit_index') }}" class="btn-secondary">Continuar Comprando</a>
+            </div>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

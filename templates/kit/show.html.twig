@@ -1,0 +1,61 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ kit.nome }} - Surpreenda Pet{% endblock %}
+
+{% block stylesheets %}
+<link rel="stylesheet" href="{{ asset('styles/kit/show.css') }}">
+{% endblock %}
+
+{% block body %}
+<div class="kit-show">
+    <div class="kit-detail-card">
+        <div class="kit-detail-left">
+            <div class="kit-image-wrapper">
+                {% if kit.imagemUrl %}
+                    <img src="{{ asset(kit.imagemUrl) }}" alt="{{ kit.nome }}" class="kit-detail-image">
+                {% else %}
+                    <img src="{{ asset('3f8d2b61c81f6a1fb9deb8627ce294df1a516f9e.jpg') }}" alt="{{ kit.nome }}" class="kit-detail-image">
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="kit-detail-right">
+            <div class="kit-detail-badge">
+                {{ kit.quantidadeItens }} ITENS
+            </div>
+
+            <h1 class="kit-detail-title">{{ kit.nome }}</h1>
+
+            {% if kit.descricao %}
+                <p class="kit-detail-description">{{ kit.descricao }}</p>
+            {% endif %}
+
+            <div class="kit-detail-price-block">
+                <span class="kit-detail-price">R$ {{ kit.preco|number_format(2, ',', '.') }}</span>
+            </div>
+
+            {% if kit.categorias|length > 0 %}
+                <div class="kit-detail-categorias">
+                    {% for categoria in kit.categorias %}
+                        <span class="categoria-tag">{{ categoria.nome }}</span>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            {% if kit.produtos|length > 0 %}
+                <div class="kit-produtos-list">
+                    <h3 class="kit-produtos-title">Contém:</h3>
+                    <ul>
+                        {% for produto in kit.produtos %}
+                            <li>{{ produto.nome }} — R$ {{ produto.precoVenda|number_format(2, ',', '.') }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endif %}
+
+            <a href="{{ path('carrinho_adicionar', {kitId: kit.id}) }}" class="btn-buy">Adicionar ao Carrinho</a>
+            <a href="{{ path('kit_index') }}" class="btn-back-link">Voltar para os Kits</a>
+        </div>
+    </div>
+</div>
+{% endblock %}
