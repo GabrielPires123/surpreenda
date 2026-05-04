@@ -1,14 +1,20 @@
 services:
   database:
     image: 'postgres:16-alpine'
+    restart: always
     environment:
       POSTGRES_DB: surpreenda
-      POSTGRES_PASSWORD: '!ChangeMe!'
-      POSTGRES_USER: app
+      POSTGRES_PASSWORD: surpreenda
+      POSTGRES_USER: surpreenda
     ports:
       - '5432:5432'
     volumes:
       - db_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U surpreenda']
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
   php:
     build:
@@ -17,12 +23,21 @@ services:
     working_dir: /app
     volumes:
       - .:/app
+      - /app/var
     depends_on:
-      - database
+      database:
+        condition: service_healthy
     ports:
-      - '8000:8000'
+      - '8080:8000'
     environment:
-      DATABASE_URL: 'postgresql://app:!ChangeMe!@database:5432/surpreenda?serverVersion=16&charset=utf8'
+      DATABASE_URL: 'postgresql://surpreenda:surpreenda@database:5432/surpreenda?serverVersion=16&charset=utf8'
+      APP_SECRET: a3f2e9c8b1d4a5f6e7c8b9d0a1f2e3c4
+      APP_ENV: dev
+    command: >
+      sh -c "
+        chmod +x docker-entrypoint.sh &&
+        exec ./docker-entrypoint.sh
+      "
 
   mailer:
     image: 'axllent/mailpit'

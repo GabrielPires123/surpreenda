@@ -1,21 +1,22 @@
-FROM php:8.3-cli
+FROM php:8.2-fpm
 
 RUN apt-get update && apt-get install -y \
-    git \
-    unzip \
-    libpq-dev \
-    && docker-php-ext-install pdo_pgsql pgsql
+    git unzip zip libicu-dev libpq-dev libzip-dev \
+    && docker-php-ext-configure intl \
+    && docker-php-ext-install intl pdo_pgsql zip \
+    && apt-get clean && rm -rf /var/lib/apt/lists/*
 
-RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 WORKDIR /app
 
 COPY composer.json composer.lock symfony.lock ./
-RUN composer install --no-scripts --no-autoloader
+RUN composer install --no-scripts --no-interaction
 
 COPY . .
-RUN composer dump-autoload --optimize
+
+RUN mkdir -p var/cache var/log var/share && chmod -R 777 var/
 
 EXPOSE 8000
 
-CMD ["php", "-S", "0.0.0.0:8000", "-t", "public/"]
+CMD ["php", "-S", "0.0.0.0:8000", "-t", "public"]
