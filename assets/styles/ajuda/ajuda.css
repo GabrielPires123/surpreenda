@@ -1,0 +1,80 @@
+.ajuda-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: calc(100vh - 120px);
+    padding: 2rem 1rem;
+    box-sizing: border-box;
+}
+
+.ajuda-card {
+    max-width: 600px;
+    text-align: center;
+    padding: 3rem 2rem;
+    background: #ffffff;
+    border-radius: 20px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    box-sizing: border-box;
+}
+
+.ajuda-card h1 {
+    font-family: 'Nunito', sans-serif;
+    font-size: 2rem;
+    font-weight: 700;
+    color: #333333;
+    margin-bottom: 1rem;
+    box-sizing: border-box;
+}
+
+.ajuda-card p {
+    font-family: 'Nunito', sans-serif;
+    font-size: 1.1rem;
+    color: #555555;
+    line-height: 1.6;
+    margin-bottom: 2rem;
+    box-sizing: border-box;
+}
+
+.btn-ajuda {
+    display: inline-block;
+    padding: 0.875rem 2.5rem;
+    background: #00c4cc;
+    color: #ffffff;
+    font-family: 'Nunito', sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    text-decoration: none;
+    border-radius: 50px;
+    transition: background 0.2s ease;
+    box-sizing: border-box;
+}
+
+.btn-ajuda:hover {
+    background: #00a3aa;
+}
+
+@media (max-width: 768px) {
+    .ajuda-container {
+        padding: 1rem 0.5rem;
+        min-height: calc(100vh - 80px);
+    }
+
+    .ajuda-card {
+        padding: 2rem 1rem;
+        border-radius: 12px;
+        margin: 0 0.5rem;
+    }
+
+    .ajuda-card h1 {
+        font-size: 1.5rem;
+    }
+
+    .ajuda-card p {
+        font-size: 1rem;
+    }
+
+    .btn-ajuda {
+        padding: 0.75rem 2rem;
+        font-size: 0.9rem;
+    }
+}

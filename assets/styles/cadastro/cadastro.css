@@ -1,0 +1,199 @@
+/* Cadastro Page Styles */
+
+*, *::before, *::after {
+    box-sizing: border-box;
+}
+
+.cadastro-page {
+    min-height: 100vh;
+    display: flex;
+    background: #f4ead5;
+    padding: 0;
+}
+
+.cadastro-illustration {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #f4ead5;
+    padding: 2rem;
+}
+
+.cadastro-dogs-img {
+    width: 100%;
+    max-width: 600px;
+    height: auto;
+    max-height: 90vh;
+    object-fit: contain;
+}
+
+.cadastro-form-container {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 2rem;
+}
+
+.cadastro-card {
+    background: #ffffff;
+    border-radius: 20px;
+    padding: 2rem 2.5rem;
+    max-width: 420px;
+    width: 100%;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.cadastro-title-welcome {
+    font-family: 'Nunito', sans-serif;
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: #81B29A;
+    text-align: center;
+    margin-bottom: 1.5rem;
+}
+
+.cadastro-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.cadastro-field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.cadastro-field label {
+    font-family: 'Nunito', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: #333333;
+    letter-spacing: 0.02em;
+}
+
+.cadastro-field input,
+.cadastro-field select {
+    padding: 0.65rem 1rem;
+    border: 2px solid #f0a54b;
+    border-radius: 10px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 0.9rem;
+    color: #333333;
+    background: #ffffff;
+    transition: border-color 0.2s;
+    box-sizing: border-box;
+}
+
+.cadastro-field input:focus,
+.cadastro-field select:focus {
+    outline: none;
+    border-color: #e09540;
+}
+
+.cadastro-field input::placeholder {
+    color: #999999;
+}
+
+.cadastro-btn {
+    padding: 0.75rem;
+    background: #FF6E40;
+    color: #ffffff;
+    font-family: 'Nunito', sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background 0.2s;
+    letter-spacing: 0.05em;
+    margin-top: 0.5rem;
+}
+
+.cadastro-btn:hover {
+    background: #e5622f;
+}
+
+.cadastro-back-link {
+    display: block;
+    margin-top: 1.5rem;
+    font-family: 'Nunito', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: #FF6E40;
+    text-decoration: none;
+    letter-spacing: 0.1em;
+    text-align: center;
+    transition: color 0.2s;
+}
+
+.cadastro-back-link:hover {
+    text-decoration: underline;
+}
+
+.cadastro-login-link {
+    font-family: 'Nunito', sans-serif;
+    font-size: 0.85rem;
+    color: #333333;
+    margin-top: 1.5rem;
+    margin-bottom: 0;
+    text-align: center;
+}
+
+.cadastro-login-link a {
+    color: #FF6E40;
+    text-decoration: none;
+    font-weight: 700;
+}
+
+.cadastro-login-link a:hover {
+    text-decoration: underline;
+}
+
+@media (max-width: 768px) {
+    .cadastro-page {
+        flex-direction: column;
+    }
+
+    .cadastro-illustration {
+        display: none;
+    }
+
+    .cadastro-form-container {
+        min-height: auto;
+        padding: 1.5rem 1rem;
+    }
+
+    .cadastro-card {
+        padding: 1.5rem 1.25rem;
+        border-radius: 16px;
+    }
+
+    .cadastro-title-welcome {
+        font-size: 1.4rem;
+        margin-bottom: 1.25rem;
+    }
+
+    .cadastro-field label {
+        font-size: 0.75rem;
+    }
+
+    .cadastro-field input,
+    .cadastro-field select {
+        padding: 0.6rem 0.85rem;
+        font-size: 0.85rem;
+    }
+
+    .cadastro-btn {
+        padding: 0.65rem;
+        font-size: 0.9rem;
+    }
+
+    .cadastro-back-link,
+    .cadastro-login-link {
+        font-size: 0.8rem;
+    }
+}

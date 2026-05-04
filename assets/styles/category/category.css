@@ -1,0 +1,71 @@
+/* Category Page Styles */
+*, *::before, *::after {
+    box-sizing: border-box;
+}
+
+.category-page {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem 1rem;
+    font-family: 'Nunito', sans-serif;
+}
+
+.category-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 1.5rem;
+}
+
+.category-card {
+    background: #ffffff;
+    border: 1px solid #f4ead5;
+    border-radius: 20px;
+    padding: 2rem;
+    text-align: center;
+    transition: box-shadow 0.2s;
+}
+
+.category-card:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.category-icon {
+    width: 80px;
+    height: 80px;
+    background: #8bc34a;
+    border-radius: 50%;
+    margin: 0 auto 1rem;
+}
+
+.category-name {
+    font-family: 'Nunito', sans-serif;
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #333333;
+    margin: 0 0 1rem;
+}
+
+@media (max-width: 768px) {
+    .category-page {
+        padding: 1rem 0.75rem;
+    }
+
+    .category-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+
+    .category-card {
+        padding: 1.5rem 1rem;
+        border-radius: 14px;
+    }
+
+    .category-icon {
+        width: 60px;
+        height: 60px;
+    }
+
+    .category-name {
+        font-size: 1.1rem;
+    }
+}
