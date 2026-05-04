@@ -13,8 +13,8 @@ use Symfony\Component\Routing\Attribute\Route;
 class ProductController extends AbstractController
 {
     public function __construct(
-        private readonly ProdutoRepository $produtoRepository,
-        private readonly CategoriaRepository $categoriaRepository,
+        private ProdutoRepository   $produtoRepository,
+        private CategoriaRepository $categoriaRepository,
     ) {
     }
 

@@ -18,11 +18,11 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 class PedidoController extends AbstractController
 {
     public function __construct(
-        private readonly PedidoService $pedidoService,
+        private PedidoService $pedidoService,
     ) {
     }
 
-    #[Route(methods: ['GET'], name: 'list')]
+    #[Route(name: 'list', methods: ['GET'])]
     public function list(): JsonResponse
     {
         /** @var User $user */

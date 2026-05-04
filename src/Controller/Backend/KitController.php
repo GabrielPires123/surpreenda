@@ -16,11 +16,11 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 class KitController extends AbstractController
 {
     public function __construct(
-        private readonly KitService $kitService,
+        private KitService $kitService,
     ) {
     }
 
-    #[Route(methods: ['GET'], name: 'list')]
+    #[Route(name: 'list', methods: ['GET'])]
     public function list(): JsonResponse
     {
         $kits = $this->kitService->listKitsDisponiveis();
@@ -28,7 +28,7 @@ class KitController extends AbstractController
         return new JsonResponse(array_map(fn($kit) => KitResponse::fromEntity($kit), $kits));
     }
 
-    #[Route('/{id}', methods: ['GET'], name: 'show')]
+    #[Route('/{id}', name: 'show', methods: ['GET'])]
     #[IsGranted('IS_AUTHENTICATED_REMEMBERED')]
     public function show(string $id): JsonResponse
     {

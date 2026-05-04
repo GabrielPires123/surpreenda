@@ -20,7 +20,7 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 class AuthController extends AbstractController
 {
     public function __construct(
-        private readonly AuthService $authService,
+        private AuthService $authService,
     ) {
     }
 
