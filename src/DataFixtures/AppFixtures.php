@@ -6,6 +6,7 @@ namespace App\DataFixtures;
 
 use App\Entity\Categoria;
 use App\Entity\Cliente;
+use App\Entity\Kit;
 use App\Entity\Pet;
 use App\Entity\Produto;
 use App\Entity\User;
@@ -56,6 +57,7 @@ class AppFixtures extends Fixture
             ['Kit Surpresa Caes Grandes', 'Caixa com 6 itens surpresos para caes de porte grande.', 64.90, 129.90, 'Kits Surpresa', 60],
         ];
 
+        $produtosMap = [];
         foreach ($produtosData as [$nome, $descricao, $precoCusto, $precoVenda, $catNome, $qtd]) {
             $produto = new Produto();
             $produto->setNome($nome);
@@ -65,6 +67,7 @@ class AppFixtures extends Fixture
             $produto->setEstoque($qtd);
             $produto->setCategoria($categorias[$catNome]);
             $manager->persist($produto);
+            $produtosMap[$nome] = $produto;
         }
 
         // === Usuario de teste ===
@@ -98,6 +101,56 @@ class AppFixtures extends Fixture
         $pet2->setPeso(4.5);
         $pet2->setIdadeMeses(24);
         $manager->persist($pet2);
+
+        // === Kits ===
+        $kitsData = [
+            [
+                'nome' => 'Kit Caes Pequenos',
+                'descricao' => 'Caixa surpresa com itens selecionados para caes de pequeno porte. Contem racao premium, petiscos, brinquedo e acessorio.',
+                'preco' => 89.90,
+                'qtdItens' => 5,
+                'categorias' => ['Kits Surpresa', 'Acessorios'],
+                'produtos_nomes' => ['Racao Premium Caes Adultos 15kg', 'Petiscos Naturais para Gatos', 'Bola Resistente para Caes', 'Coleira Ajustavel Premium', 'Shampoo Neutro Caes e Gatos'],
+            ],
+            [
+                'nome' => 'Kit Gatos',
+                'descricao' => 'Caixa com 4 itens surpresos para gatos. Inclui racao, petiscos, brinquedo e tapete higienico.',
+                'preco' => 69.90,
+                'qtdItens' => 4,
+                'categorias' => ['Kits Surpresa', 'Brinquedos'],
+                'produtos_nomes' => ['Petiscos Naturais para Gatos', 'Ratinho de Pelucia para Gatos', 'Shampoo Neutro Caes e Gatos', 'Tapete Higienico 30 unid.'],
+            ],
+            [
+                'nome' => 'Kit Caes Grandes',
+                'descricao' => 'Caixa com 6 itens surpresos para caes de porte grande. Contem racao, petiscos, brinquedos e acessorios.',
+                'preco' => 129.90,
+                'qtdItens' => 6,
+                'categorias' => ['Kits Surpresa'],
+                'produtos_nomes' => ['Racao Premium Caes Adultos 15kg', 'Bola Resistente para Caes', 'Coleira Ajustavel Premium', 'Cama Ortopedica para Pets', 'Tapete Higienico 30 unid.', 'Shampoo Neutro Caes e Gatos'],
+            ],
+        ];
+
+        foreach ($kitsData as $kitData) {
+            $kit = new Kit();
+            $kit->setNome($kitData['nome']);
+            $kit->setDescricao($kitData['descricao']);
+            $kit->setPreco($kitData['preco']);
+            $kit->setQuantidadeItens($kitData['qtdItens']);
+
+            foreach ($kitData['categorias'] as $catNome) {
+                if (isset($categorias[$catNome])) {
+                    $kit->addCategoria($categorias[$catNome]);
+                }
+            }
+
+            foreach ($kitData['produtos_nomes'] as $prodNome) {
+                if (isset($produtosMap[$prodNome])) {
+                    $kit->addProduto($produtosMap[$prodNome]);
+                }
+            }
+
+            $manager->persist($kit);
+        }
 
         $manager->flush();
     }
