@@ -1,0 +1,17 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Ajuda - Surpreenda Pet{% endblock %}
+
+{% block stylesheets %}
+<link rel="stylesheet" href="{{ asset('styles/ajuda/ajuda.css') }}">
+{% endblock %}
+
+{% block body %}
+<div class="ajuda-container">
+    <div class="ajuda-card">
+        <h1>Olá! Como podemos ajudar?</h1>
+        <p>Você está com dúvidas ou precisa relatar um problema com algum produto? Nós estamos aqui para te ajudar.</p>
+        <a href="{{ path('home_ajuda_central') }}" class="btn-ajuda">Central de Ajuda</a>
+    </div>
+</div>
+{% endblock %}

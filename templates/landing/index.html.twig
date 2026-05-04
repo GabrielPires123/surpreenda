@@ -1,0 +1,22 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Surpreenda Pet{% endblock %}
+
+{% block stylesheets %}
+<link rel="stylesheet" href="{{ asset('styles/landing/landing.css') }}">
+{% endblock %}
+
+{% block body %}
+<section class="landing-welcome">
+    {# Main content #}
+    <div class="landing-content">
+        <img src="{{ asset('3f8d2b61c81f6a1fb9deb8627ce294df1a516f9e.jpg') }}" alt="Cães Surpreenda Pet">
+        <div class="landing-text-area">
+            <h2 class="landing-welcome-greeting">
+                Olá, Seja Bem<br>Vindo(a) ao<br>SURPREENDA PET
+            </h2>
+            <a href="{{ path('product_index') }}" class="landing-cta-btn">COMECE AGORA!</a>
+        </div>
+    </div>
+</section>
+{% endblock %}

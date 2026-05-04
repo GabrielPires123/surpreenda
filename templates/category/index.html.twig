@@ -1,0 +1,37 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Categorias - Surpreenda Pet{% endblock %}
+
+{% block stylesheets %}
+<link rel="stylesheet" href="{{ asset('styles/category/category.css') }}">
+{% endblock %}
+
+{% block body %}
+<div class="category-page">
+    <h1 class="page-title">Categorias</h1>
+    <p class="page-subtitle">Explore por tipo de produto</p>
+
+    {% if categorias is empty %}
+        <p class="no-data">Nenhuma categoria disponível.</p>
+    {% else %}
+        <div class="category-grid">
+            {% for categoria in categorias %}
+                <div class="category-card">
+                    {% if categoria.iconeUrl %}
+                        <img src="{{ asset(categoria.iconeUrl) }}" alt="{{ categoria.nome }}" class="category-icon">
+                    {% else %}
+                        <div class="category-icon category-icon-default">
+                            {{ categoria.nome|first|upper }}
+                        </div>
+                    {% endif %}
+                    <h3 class="category-name">{{ categoria.nome }}</h3>
+                    {% if categoria.descricao %}
+                        <p class="category-description">{{ categoria.descricao|slice(0, 80) }}{% if categoria.descricao|length > 80 %}...{% endif %}</p>
+                    {% endif %}
+                    <a href="{{ path('product_by_category', {slug: categoria.id}) }}" class="btn-primary">Ver produtos</a>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

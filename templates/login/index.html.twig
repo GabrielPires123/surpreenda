@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Login - Surpreenda Pet{% endblock %}
+
+{% block header %}{% endblock %}
+{% block footer %}{% endblock %}
+{% block stylesheets %}
+<link rel="stylesheet" href="{{ asset('styles/login/login.css') }}">
+{% endblock %}
+
+{% block body %}
+<section class="login-page">
+    <h2 class="login-title">Que bom te ver<br><span>Novamente!!!</span></h2>
+
+    <div class="login-card">
+        {% for message in app.flashes('error') %}
+        <div class="login-error">{{ message }}</div>
+        {% endfor %}
+
+        <form class="login-form" method="POST">
+            <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+
+            <div class="login-field">
+                <input type="text" name="username" placeholder="telefone@gmail.com" required autocomplete="username">
+            </div>
+
+            <div class="login-field">
+                <input type="password" name="password" placeholder="Senha" required autocomplete="current-password">
+            </div>
+
+            <a href="#" class="login-forgot">Esqueceu a senha? <strong>Clique aqui</strong></a>
+
+            <button type="submit" class="login-btn">LOGIN</button>
+        </form>
+
+        <p class="login-register">Não tem uma conta? <a href="{{ path('cadastro_usuario') }}" class="login-register-link">Cadastre-se</a></p>
+    </div>
+
+    <a href="{{ path('home_index') }}" class="login-back-link">VOLTAR</a>
+</section>
+{% endblock %}

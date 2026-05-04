@@ -1,0 +1,32 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Perfil - Surpreenda Pet{% endblock %}
+
+{% block stylesheets %}
+<link rel="stylesheet" href="{{ asset('styles/perfil/perfil.css') }}">
+{% endblock %}
+
+{% block body %}
+<div class="perfil-container">
+    <div class="perfil-header">
+        <div class="perfil-avatar-circle"></div>
+        <h2>Meu Perfil</h2>
+    </div>
+
+    <div class="perfil-card">
+        <div class="perfil-info">
+            <span class="perfil-label">Nome:</span>
+            <span class="perfil-value">Nome do Usuário</span>
+        </div>
+        <div class="perfil-info">
+            <span class="perfil-label">Email:</span>
+            <span class="perfil-value">usuario@email.com</span>
+        </div>
+    </div>
+
+    <div class="perfil-actions">
+        <a href="{{ path('perfil_editar') }}" class="btn-perfil-editar">Editar Perfil</a>
+        <a href="#" class="btn-perfil-logout">Sair</a>
+    </div>
+</div>
+{% endblock %}

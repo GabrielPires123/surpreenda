@@ -1,0 +1,60 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ produto.nome }} - Surpreenda Pet{% endblock %}
+
+{% block stylesheets %}
+<link rel="stylesheet" href="{{ asset('styles/product/show.css') }}">
+{% endblock %}
+
+{% block body %}
+<div class="product-show">
+    <div class="product-detail-card">
+        <div class="product-detail-left">
+            <div class="product-image-wrapper">
+                {% if produto.imagemUrl %}
+                    <img src="{{ asset(produto.imagemUrl) }}" alt="{{ produto.nome }}" class="product-main-image">
+                {% else %}
+                    <img src="{{ asset('3f8d2b61c81f6a1fb9deb8627ce294df1a516f9e.jpg') }}" alt="{{ produto.nome }}" class="product-main-image">
+                {% endif %}
+            </div>
+            <div class="image-indicators">
+                <span class="indicator-dot active"></span>
+            </div>
+        </div>
+
+        <div class="product-detail-right">
+            <div class="product-category-badge">
+                {{ produto.categoria.nome }}
+            </div>
+
+            <h1 class="product-detail-title">{{ produto.nome }}</h1>
+
+            <div class="product-price-block">
+                <span class="product-detail-price">R$ {{ produto.precoVenda|number_format(2, ',', '.') }}</span>
+                {% if produto.precoCusto > 0 and produto.precoVenda > produto.precoCusto %}
+                    {% set desconto = ((produto.precoVenda - produto.precoCusto) / produto.precoVenda * 100)|round(0) %}
+                    {% if desconto > 0 %}
+                        <span class="product-discount-badge">{{ desconto }}% OFF</span>
+                    {% endif %}
+                {% endif %}
+            </div>
+
+            {% if produto.descricao %}
+                <p class="product-detail-description">
+                {{ produto.descricao }}
+                </p>
+            {% endif %}
+
+            {% if produto.estoque > 0 %}
+                <span class="product-stock-status product-stock-available">Em estoque ({{ produto.estoque }})</span>
+            {% else %}
+                <span class="product-stock-status product-stock-unavailable">Indisponível</span>
+            {% endif %}
+
+            {% if produto.estoque > 0 %}
+            <a href="#" class="btn-buy">Comprar</a>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

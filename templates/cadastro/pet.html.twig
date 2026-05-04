@@ -1,0 +1,50 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Cadastro de Pet - Surpreenda Pet{% endblock %}
+
+{% block header %}{% endblock %}
+{% block footer %}{% endblock %}
+{% block stylesheets %}
+<link rel="stylesheet" href="{{ asset('styles/cadastro/cadastro.css') }}">
+{% endblock %}
+
+{% block body %}
+<section class="cadastro-page">
+    <div class="cadastro-card">
+        <h2 class="cadastro-title">Cadastro de<br><span>Pet</span></h2>
+
+        <form class="cadastro-form" method="POST">
+            <input type="hidden" name="_csrf_token" value="{{ csrf_token('cadastro_pet') }}">
+
+            <div class="cadastro-field">
+                <label for="pet-nome">Nome do Pet</label>
+                <input type="text" id="pet-nome" name="nome" placeholder="Nome do pet" required>
+            </div>
+
+            <div class="cadastro-field">
+                <label for="pet-especie">Espécie</label>
+                <select id="pet-especie" name="especie">
+                    <option value="canino">Canino</option>
+                    <option value="felino">Felino</option>
+                    <option value="ave">Ave</option>
+                    <option value="roedor">Roedor</option>
+                </select>
+            </div>
+
+            <div class="cadastro-field">
+                <label for="pet-raca">Raça</label>
+                <input type="text" id="pet-raca" name="raca" placeholder="Raça do pet">
+            </div>
+
+            <div class="cadastro-field">
+                <label for="pet-peso">Peso (kg)</label>
+                <input type="number" id="pet-peso" name="peso" step="0.01" min="0" placeholder="0.00">
+            </div>
+
+            <button type="submit" class="cadastro-btn">CADASTRAR</button>
+        </form>
+
+        <a href="{{ path('cadastro_usuario') }}" class="cadastro-back-link">VOLTAR</a>
+    </div>
+</section>
+{% endblock %}

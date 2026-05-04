@@ -1,0 +1,34 @@
+<header class="site-header">
+    <a href="/" class="header-logo" aria-label="Surpreenda Pet - Página inicial">
+        <svg class="header-logo-paw" viewBox="0 0 24 24" width="28" height="28" fill="#f0a54b" aria-hidden="true">
+            <ellipse cx="7" cy="8" rx="2.5" ry="3"/>
+            <ellipse cx="12" cy="5" rx="2.5" ry="3"/>
+            <ellipse cx="17" cy="8" rx="2.5" ry="3"/>
+            <ellipse cx="5" cy="14" rx="2.2" ry="2.5"/>
+            <ellipse cx="19" cy="14" rx="2.2" ry="2.5"/>
+            <path d="M12 21C8 21 5.5 18 5.5 15.5C5.5 14 7 13 9 13.5C9.5 11.5 10.5 10.5 12 10.5C13.5 10.5 14.5 11.5 15 13.5C17 13 18.5 14 18.5 15.5C18.5 18 16 21 12 21Z"/>
+        </svg>
+        <span class="logo-text">
+            Surpreenda <span class="logo-accent">Pet</span>
+        </span>
+    </a>
+
+    <nav class="site-nav">
+        <!-- HOME removido (logo já cumpre essa função) -->
+        <a href="/produtos" class="nav-link">PRODUTOS</a>
+        <a href="/categorias" class="nav-link">CATEGORIAS</a>
+        <a href="/ajuda" class="nav-link">AJUDA</a>
+
+        {% if app.user %}
+            <div class="nav-dropdown">
+                <span class="nav-link nav-dropdown-toggle">{{ app.user.fullName }}</span>
+                <div class="nav-dropdown-content">
+                    <a href="{{ path('perfil_index') }}" class="nav-dropdown-item">Perfil</a>
+                    <a href="{{ path('app_logout') }}" class="nav-dropdown-item">Sair</a>
+                </div>
+            </div>
+        {% else %}
+            <a href="{{ path('home_login') }}" class="nav-link">ENTRAR</a>
+        {% endif %}
+    </nav>
+</header>

@@ -1,0 +1,42 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Produtos - Surpreenda Pet{% endblock %}
+
+{% block stylesheets %}
+<link rel="stylesheet" href="{{ asset('styles/product/product.css') }}">
+{% endblock %}
+
+{% block body %}
+<div class="product-page">
+    <h1 class="page-title">Produtos</h1>
+    <p class="page-subtitle">
+        {% if categoria is defined and categoria %}
+            Categoria: {{ categoria.nome }}
+        {% else %}
+            Todos os produtos
+        {% endif %}
+    </p>
+
+    {% if produtos is empty %}
+        <p class="no-data">Nenhum produto encontrado.</p>
+    {% else %}
+        <div class="product-grid">
+            {% for produto in produtos %}
+                <div class="product-card">
+                    <div class="product-image">
+                        {% if produto.imagemUrl %}
+                            <img src="{{ asset(produto.imagemUrl) }}" alt="{{ produto.nome }}">
+                        {% else %}
+                            <img src="{{ asset('3f8d2b61c81f6a1fb9deb8627ce294df1a516f9e.jpg') }}" alt="{{ produto.nome }}">
+                        {% endif %}
+                    </div>
+                    <h3 class="product-name">{{ produto.nome }}</h3>
+                    <p class="product-desc">{{ produto.descricao|slice(0, 80) }}{% if produto.descricao|length > 80 %}...{% endif %}</p>
+                    <span class="product-price">R$ {{ produto.precoVenda|number_format(2, ',', '.') }}</span>
+                    <a href="{{ path('product_show', {id: produto.id}) }}" class="btn-primary">Ver detalhes</a>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

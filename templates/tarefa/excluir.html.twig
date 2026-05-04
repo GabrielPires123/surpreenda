@@ -1,0 +1,23 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Excluir Tarefa - Surpreenda Pet{% endblock %}
+
+{% block stylesheets %}
+<link rel="stylesheet" href="{{ asset('styles/tarefa/excluir.css') }}">
+{% endblock %}
+
+{% block body %}
+<div class="excluir-container">
+    <h2>Excluir Tarefa</h2>
+    <div class="excluir-card">
+        <p>Tem certeza que deseja excluir a tarefa:</p>
+        <p class="excluir-nome-tarefa"><strong>"Nome da Tarefa"</strong></p>
+        <p class="excluir-descricao">Descrição breve da tarefa que será removida permanentemente.</p>
+    </div>
+    <form method="POST" class="excluir-form">
+        <input type="hidden" name="_csrf_token" value="{{ csrf_token('tarefa_excluir') }}">
+        <button type="submit" class="btn-confirmar-excluir">Confirmar Exclusão</button>
+        <a href="{{ path('tarefa_index') }}" class="btn-cancelar">Cancelar</a>
+    </form>
+</div>
+{% endblock %}

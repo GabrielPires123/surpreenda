@@ -1,0 +1,33 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Editar Tarefa - Surpreenda Pet{% endblock %}
+
+{% block stylesheets %}
+<link rel="stylesheet" href="{{ asset('styles/tarefa/tarefa.css') }}">
+{% endblock %}
+
+{% block body %}
+<div class="tarefa-form-container">
+    <h2>Editar Tarefa</h2>
+    <form method="POST" class="tarefa-form">
+        <input type="hidden" name="_csrf_token" value="{{ csrf_token('tarefa_editar') }}">
+        <div class="form-group">
+            <label for="tarefa-nome">Nome da Tarefa</label>
+            <input type="text" id="tarefa-nome" name="nome" value="Nome da Tarefa" required>
+        </div>
+        <div class="form-group">
+            <label for="tarefa-descricao">Descrição</label>
+            <textarea id="tarefa-descricao" name="descricao" rows="4" required>Descrição da tarefa aqui...</textarea>
+        </div>
+        <div class="form-group">
+            <label for="tarefa-status">Status</label>
+            <select id="tarefa-status" name="status">
+                <option value="pendente">Pendente</option>
+                <option value="concluida">Concluída</option>
+            </select>
+        </div>
+        <button type="submit" class="btn-salvar">Salvar</button>
+        <a href="{{ path('tarefa_index') }}" class="btn-cancelar">Cancelar</a>
+    </form>
+</div>
+{% endblock %}

@@ -1,0 +1,60 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Cadastro - Surpreenda Pet{% endblock %}
+
+{% block header %}{% endblock %}
+{% block footer %}{% endblock %}
+
+{% block stylesheets %}
+<link rel="stylesheet" href="{{ asset('styles/cadastro/cadastro.css') }}">
+{% endblock %}
+
+{% block body %}
+<section class="cadastro-page">
+    <div class="cadastro-illustration">
+        <img src="{{ asset('03b2b99b114b14ba1fa72b0df2b1a7fdc9bd0558.png') }}" alt="Cães Surpreenda Pet" class="cadastro-dogs-img">
+    </div>
+    <div class="cadastro-form-container">
+        <div class="cadastro-card">
+            <h2 class="cadastro-title-welcome">Welcome!</h2>
+            <form class="cadastro-form" method="POST">
+                <input type="hidden" name="_csrf_token" value="{{ csrf_token('cadastro') }}">
+
+                <div class="cadastro-field">
+                    <label for="cadastro-nome">Nome *</label>
+                    <input type="text" id="cadastro-nome" name="nome" placeholder="Nome completo" required>
+                </div>
+
+                <div class="cadastro-field">
+                    <label for="cadastro-sobrenome">Sobrenome *</label>
+                    <input type="text" id="cadastro-sobrenome" name="sobrenome" placeholder="Sobrenome" required>
+                </div>
+
+                <div class="cadastro-field">
+                    <label for="cadastro-email">Email *</label>
+                    <input type="email" id="cadastro-email" name="email" placeholder="email@exemplo.com" required>
+                </div>
+
+                <div class="cadastro-field">
+                    <label for="cadastro-cpf">CPF *</label>
+                    <input type="text" id="cadastro-cpf" name="cpf" placeholder="000.000.000-00" required pattern="\d{3}\.?\d{3}\.?\d{3}-?\d{2}">
+                </div>
+
+                <div class="cadastro-field">
+                    <label for="cadastro-senha">Senha *</label>
+                    <input type="password" id="cadastro-senha" name="senha" placeholder="Mínimo 8 caracteres" required minlength="8">
+                </div>
+
+                <div class="cadastro-field">
+                    <label for="cadastro-senha-confirm">Confirmar Senha *</label>
+                    <input type="password" id="cadastro-senha-confirm" name="senha_confirm" placeholder="Repita a senha" required minlength="8">
+                </div>
+
+                <button type="submit" class="cadastro-btn">Cadastrar</button>
+            </form>
+
+            <p class="cadastro-login-link">Já tem uma conta? <a href="{{ path('home_login') }}">Faça login</a></p>
+        </div>
+    </div>
+</section>
+{% endblock %}
