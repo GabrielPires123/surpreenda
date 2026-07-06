@@ -22,40 +22,47 @@ class AuthService implements AuthServiceInterface
     ) {
     }
 
-    public function registerUser(string $nome, string $email, string $cpf, string $password, ?string $telefone = null, ?array $endereco = null): User
+    public function registerUser(string $nome, string $email, string $password, ?string $cpf = null, ?string $telefone = null, ?array $endereco = null): User
     {
         $existingUser = $this->userRepository->findOneByEmail($email);
         if ($existingUser !== null) {
             throw new \InvalidArgumentException('E-mail já cadastrado.');
         }
 
-        $existingCliente = $this->clienteRepository->findOneByCpf($cpf);
-        if ($existingCliente !== null) {
-            throw new \InvalidArgumentException('CPF já cadastrado.');
+        if ($cpf !== null && $cpf !== '') {
+            $existingCliente = $this->clienteRepository->findOneByCpf($cpf);
+            if ($existingCliente !== null) {
+                throw new \InvalidArgumentException('CPF já cadastrado.');
+            }
         }
+
+        $parts = explode(' ', trim($nome));
+        $firstName = $parts[0] ?? 'Usuário';
+        $lastName = count($parts) > 1 ? implode(' ', array_slice($parts, 1)) : '';
 
         $user = (new User())
             ->setEmail($email)
-            ->setNome($nome)
-            ->setIsVerified(false);
+            ->setFirstName($firstName)
+            ->setLastName($lastName);
 
         $hashedPassword = $this->passwordHasher->hashPassword($user, $password);
         $user->setPassword($hashedPassword);
         $user->initUuid();
 
         $cliente = (new Cliente())
-            ->setCpf($cpf)
+            ->setCpf($cpf !== null && $cpf !== '' ? $cpf : null)
             ->setUser($user);
 
-        if ($telefone !== null) {
-            $telefoneEntity = (new Telefone())
+        if ($telefone !== null && $telefone !== '') {
+            $telefoneEntity = new Telefone();
+            $telefoneEntity->initUuid()
                 ->setNumero($telefone)
-                ->setCliente($cliente)
-                ->initUuid();
+                ->setCliente($cliente);
             $cliente->addTelefone($telefoneEntity);
         }
         if ($endereco !== null) {
-            $enderecoEntity = (new Endereco())
+            $enderecoEntity = new Endereco();
+            $enderecoEntity->initUuid()
                 ->setLogradouro($endereco['logradouro'] ?? '')
                 ->setNumero($endereco['numero'] ?? '')
                 ->setComplemento($endereco['complemento'] ?? null)
@@ -63,8 +70,7 @@ class AuthService implements AuthServiceInterface
                 ->setCidade($endereco['cidade'] ?? '')
                 ->setEstado($endereco['estado'] ?? '')
                 ->setCep($endereco['cep'] ?? '')
-                ->setCliente($cliente)
-                ->initUuid();
+                ->setCliente($cliente);
             $cliente->addEndereco($enderecoEntity);
         }
 

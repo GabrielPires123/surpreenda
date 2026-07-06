@@ -1,0 +1,123 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Checkout - Surpreenda Pet{% endblock %}
+
+{% block stylesheets %}
+<link rel="stylesheet" href="{{ asset('styles/checkout/checkout.css') }}">
+{% endblock %}
+
+{% block body %}
+<div class="checkout-page">
+    {{ include('components/breadcrumb.html.twig', {
+        items: [
+            { label: 'Início', url: path('home_index') },
+            { label: 'Carrinho', url: path('carrinho_index') },
+            { label: 'Checkout' }
+        ]
+    }) }}
+
+    <h1 class="page-title">Finalizar Assinatura</h1>
+
+    {% for message in app.flashes('error') %}
+        <div class="checkout-error" role="alert" aria-live="assertive">{{ message }}</div>
+    {% endfor %}
+
+    <div class="checkout-grid">
+        {# Left column: order summary #}
+        <div class="checkout-summary">
+            <div class="summary-card">
+                <h2 class="summary-card-title">Seu Pedido</h2>
+                {% for item in kits|merge(products|default([])) %}
+                    {% set entity = item.entity ?? item %}
+                    {% set qty = item.qty ?? 1 %}
+                    <div class="summary-kit-row">
+                        {% if entity.imagemUrl %}
+                            <img src="{{ asset(entity.imagemUrl) }}" alt="{{ entity.nome }}" class="summary-kit-image">
+                        {% else %}
+                            <div class="summary-kit-image-placeholder">
+                                <svg width="32" height="32" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <rect width="40" height="40" rx="8" fill="var(--color-beige)"/>
+                                    <text x="20" y="25" text-anchor="middle" font-size="18" fill="var(--color-orange)">📦</text>
+                                </svg>
+                            </div>
+                        {% endif %}
+                        <div class="summary-kit-info">
+                            <h3 class="summary-kit-name">{{ entity.nome }}{% if qty > 1 %} (x{{ qty }}){% endif %}</h3>
+                            {% if entity.quantidadeItens is defined %}
+                                <span class="summary-kit-items">{{ entity.quantidadeItens }} {{ entity.quantidadeItens == 1 ? 'item' : 'itens' }}</span>
+                            {% else %}
+                                <span class="summary-kit-items">Produto avulso</span>
+                            {% endif %}
+                        </div>
+                        <span class="summary-kit-price">R$ {{ (entity.preco * qty)|number_format(2, ',', '.') }}</span>
+                    </div>
+                {% endfor %}
+
+                <div class="summary-total">
+                    <span class="summary-total-label">Total mensal</span>
+                    <span class="summary-total-value">R$ {{ total|number_format(2, ',', '.') }}</span>
+                </div>
+            </div>
+        </div>
+
+        {# Right column: pet selection per kit #}
+        <div class="checkout-pet-select">
+            <h2 class="section-title">Para qual pet?</h2>
+
+            {% if pets is empty %}
+                <div class="checkout-warning" role="alert" aria-live="assertive">
+                    <p>Você precisa cadastrar um pet antes de finalizar a assinatura.</p>
+                    <a href="{{ path('perfil_index') }}" class="btn-primary">Cadastrar Pet</a>
+                </div>
+            {% else %}
+                <form action="{{ path('checkout_confirm') }}" method="POST" class="checkout-form" id="checkout-form">
+                    {% for item in kits %}
+                        {% set entity = item.entity ?? item %}
+                        {% set itemIndex = loop.index0 %}
+                        <div class="checkout-kit-section">
+                            <h3 class="kit-section-title">{{ entity.nome }}</h3>
+
+                            <div class="pet-options">
+                                {% for pet in pets %}
+                                    <label class="pet-option">
+                                        <input type="radio" name="kits[{{ itemIndex }}][pet_id]" value="{{ pet.id }}" required
+                                            {% if loop.first %}checked{% endif %}>
+                                        <div class="pet-card">
+                                            {% if pet.fotoUrl %}
+                                                <img src="{{ asset(pet.fotoUrl) }}" alt="{{ pet.nome }}" class="pet-photo">
+                                            {% else %}
+                                                <div class="pet-photo-placeholder pet-type-{{ pet.tipo.value }}">
+                                                    {% if pet.tipo.value == 'dog' %}
+                                                        &#x1F415;
+                                                    {% else %}
+                                                        &#x1F408;
+                                                    {% endif %}
+                                                </div>
+                                            {% endif %}
+                                            <div class="pet-details">
+                                                <span class="pet-name">{{ pet.nome }}</span>
+                                                <span class="pet-breed">{{ pet.raca ?: 'Raça não definida' }}</span>
+                                                <span class="pet-age">{{ pet.idadeAnos }} {{ pet.idadeAnos == 1 ? 'ano' : 'anos' }}</span>
+                                            </div>
+                                        </div>
+                                    </label>
+                                {% endfor %}
+                            </div>
+                            <input type="hidden" name="kits[{{ itemIndex }}][kit_id]" value="{{ entity.id }}">
+                        </div>
+                    {% endfor %}
+
+                    <div class="checkout-total">
+                        <span class="total-label">Total mensal:</span>
+                        <span class="total-value">R$ {{ total|number_format(2, ',', '.') }}</span>
+                    </div>
+
+                    <button type="submit" class="btn-confirm" id="btn-confirm">
+                        Confirmar Assinatura
+                    </button>
+                </form>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

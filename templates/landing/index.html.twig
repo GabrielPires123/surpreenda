@@ -7,15 +7,76 @@
 {% endblock %}
 
 {% block body %}
-<section class="landing-welcome">
-    {# Main content #}
-    <div class="landing-content">
-        <img src="{{ asset('3f8d2b61c81f6a1fb9deb8627ce294df1a516f9e.jpg') }}" alt="Cães Surpreenda Pet">
-        <div class="landing-text-area">
-            <h2 class="landing-welcome-greeting">
-                Olá, Seja Bem<br>Vindo(a) ao<br>SURPREENDA PET
-            </h2>
-            <a href="{{ path('product_index') }}" class="landing-cta-btn">COMECE AGORA!</a>
+{# === HERO SECTION === #}
+<section class="hero">
+    <div class="hero-container">
+        <div class="hero-text">
+            <span class="hero-badge">O primeiro clube DIY para pets do Brasil</span>
+            <h1 class="hero-title">
+                Crie momentos, <br>não apenas brinquedos.
+            </h1>
+            <p class="hero-subtitle">
+                Receba mensalmente kits surpresa com materiais premium e projetos
+                "faça você mesmo" para fortalecer o vínculo com quem te ama de verdade.
+            </p>
+            <div class="hero-actions">
+                <a href="{{ path('kit_index') }}" class="hero-btn hero-btn--primary">Escolher Meu Kit</a>
+                <a href="#como-funciona" class="hero-btn hero-btn--secondary">
+                    Como Funciona
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M7 13l5 5 5-5M7 6l5 5 5-5"/></svg>
+                </a>
+            </div>
+        </div>
+        <div class="hero-image">
+            <div class="hero-image-frame">
+                <img src="{{ asset('3f8d2b61c81f6a1fb9deb8627ce294df1a516f9e.jpg') }}" alt="Pet brincando com kit Surpreenda Pet" loading="eager">
+            </div>
+        </div>
+    </div>
+</section>
+
+{# === COMO FUNCIONA === #}
+<section class="how-it-works" id="como-funciona">
+    <div class="how-container">
+        <h2 class="how-title">Como Funciona</h2>
+        <p class="how-subtitle">Em 3 passos simples, a experiência começa antes da caixa chegar</p>
+        <div class="how-steps">
+            <div class="how-step">
+                <div class="step-visual step-visual--pet">
+                    <svg viewBox="0 0 64 64" fill="none" aria-hidden="true">
+                        <circle cx="32" cy="22" r="8" stroke="var(--color-orange)" stroke-width="2.5" fill="none"/>
+                        <circle cx="20" cy="16" r="4" stroke="var(--color-orange)" stroke-width="2.5" fill="none"/>
+                        <circle cx="44" cy="16" r="4" stroke="var(--color-orange)" stroke-width="2.5" fill="none"/>
+                        <ellipse cx="32" cy="40" rx="12" ry="10" stroke="var(--color-orange)" stroke-width="2.5" fill="none"/>
+                        <circle cx="28" cy="38" r="2" fill="var(--color-orange)"/>
+                        <circle cx="36" cy="38" r="2" fill="var(--color-orange)"/>
+                        <path d="M30 44 Q32 46 34 44" stroke="var(--color-orange)" stroke-width="2" fill="none" stroke-linecap="round"/>
+                    </svg>
+                </div>
+                <h3 class="step-heading">Conheça seu pet</h3>
+                <p class="step-text">Cadastre seu pet e nos conte sobre ele. Cada animal é único — e o kit é pensado para o perfil do seu companheiro.</p>
+            </div>
+            <div class="how-step">
+                <div class="step-visual step-visual--box">
+                    <svg viewBox="0 0 64 64" fill="none" aria-hidden="true">
+                        <rect x="10" y="20" width="44" height="32" rx="3" stroke="var(--color-green-sage)" stroke-width="2.5" fill="none"/>
+                        <line x1="10" y1="30" x2="54" y2="30" stroke="var(--color-green-sage)" stroke-width="2"/>
+                        <rect x="24" y="24" width="16" height="6" rx="1" fill="var(--color-green-sage)" opacity="0.3"/>
+                        <path d="M32 14 L38 20 L26 20 Z" stroke="var(--color-green-sage)" stroke-width="2.5" fill="none" stroke-linejoin="round"/>
+                    </svg>
+                </div>
+                <h3 class="step-heading">Receba todo mês</h3>
+                <p class="step-text">Cada mês, uma caixa surpresa chega com brinquedos, petiscos e projetos DIY exclusivos para fazerem juntos.</p>
+            </div>
+            <div class="how-step">
+                <div class="step-visual step-visual--heart">
+                    <svg viewBox="0 0 64 64" fill="none" aria-hidden="true">
+                        <path d="M32 52 S12 40 12 26 A10 10 0 0 1 32 20 A10 10 0 0 1 52 26 C52 40 32 52 32 52Z" stroke="var(--color-red-error)" stroke-width="2.5" fill="none"/>
+                    </svg>
+                </div>
+                <h3 class="step-heading">Cancele quando quiser</h3>
+                <p class="step-text">Sem fidelidade, sem burocracia. Pause ou cancele a assinatura a qualquer momento direto no seu painel.</p>
+            </div>
         </div>
     </div>
 </section>

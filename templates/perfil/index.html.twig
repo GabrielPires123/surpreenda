@@ -7,26 +7,45 @@
 {% endblock %}
 
 {% block body %}
-<div class="perfil-container">
-    <div class="perfil-header">
-        <div class="perfil-avatar-circle"></div>
-        <h2>Meu Perfil</h2>
-    </div>
+<div class="perfil-page">
+    {{ include('components/breadcrumb.html.twig', {
+        items: [
+            { label: 'Início', url: path('home_index') },
+            { label: 'Perfil' }
+        ]
+    }) }}
 
-    <div class="perfil-card">
-        <div class="perfil-info">
-            <span class="perfil-label">Nome:</span>
-            <span class="perfil-value">Nome do Usuário</span>
-        </div>
-        <div class="perfil-info">
-            <span class="perfil-label">Email:</span>
-            <span class="perfil-value">usuario@email.com</span>
-        </div>
-    </div>
+    <h1 class="perfil-title">Meu Perfil</h1>
 
-    <div class="perfil-actions">
-        <a href="{{ path('perfil_editar') }}" class="btn-perfil-editar">Editar Perfil</a>
-        <a href="#" class="btn-perfil-logout">Sair</a>
+    <div class="perfil-grid">
+        <div class="perfil-card">
+            <div class="perfil-card-header">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="7" r="4" stroke="var(--color-green-sage)" stroke-width="1.5"/><path d="M3 18c0-3.5 3-6 7-6s7 2.5 7 6" stroke="var(--color-green-sage)" stroke-width="1.5" stroke-linecap="round"/></svg>
+                <span>Dados Pessoais</span>
+            </div>
+            <div class="perfil-detail-row">
+                <span class="perfil-detail-label">Nome</span>
+                <span class="perfil-detail-value">{{ app.user.fullName }}</span>
+            </div>
+            <div class="perfil-detail-row">
+                <span class="perfil-detail-label">Email</span>
+                <span class="perfil-detail-value">{{ app.user.email }}</span>
+            </div>
+        </div>
+
+        <div class="perfil-actions">
+            <a href="{{ path('perfil_editar') }}" class="perfil-btn-editar">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M10 3l3 3L5 14H2v-3L10 3z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                Editar Perfil
+            </a>
+            <form method="POST" action="{{ path('app_logout') }}" class="logout-form">
+                <input type="hidden" name="_csrf_token" value="{{ csrf_token('logout') }}">
+                <button type="submit" class="perfil-btn-logout">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M6 14H3a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1h3M11 11l3-3-3-3M14 8H6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    Sair
+                </button>
+            </form>
+        </div>
     </div>
 </div>
 {% endblock %}

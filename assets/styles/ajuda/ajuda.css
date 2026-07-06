@@ -11,70 +11,56 @@
     max-width: 600px;
     text-align: center;
     padding: 3rem 2rem;
-    background: #ffffff;
-    border-radius: 20px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    background: var(--color-white);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
     box-sizing: border-box;
 }
 
 .ajuda-card h1 {
-    font-family: 'Nunito', sans-serif;
-    font-size: 2rem;
-    font-weight: 700;
-    color: #333333;
+    font-family: var(--font-heading);
+    font-size: var(--font-size-2xl);
+    font-weight: 800;
+    background: var(--gradient-accent);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
     margin-bottom: 1rem;
-    box-sizing: border-box;
 }
 
 .ajuda-card p {
-    font-family: 'Nunito', sans-serif;
-    font-size: 1.1rem;
-    color: #555555;
+    font-family: var(--font-family);
+    font-size: var(--font-size-lg);
+    color: var(--color-text-soft);
     line-height: 1.6;
     margin-bottom: 2rem;
-    box-sizing: border-box;
 }
 
 .btn-ajuda {
     display: inline-block;
     padding: 0.875rem 2.5rem;
-    background: #00c4cc;
-    color: #ffffff;
-    font-family: 'Nunito', sans-serif;
-    font-size: 1rem;
+    background: linear-gradient(135deg, var(--color-orange), var(--color-orange-dark));
+    color: var(--color-text);
+    font-family: var(--font-heading);
+    font-size: var(--font-size-base);
     font-weight: 700;
     text-decoration: none;
-    border-radius: 50px;
-    transition: background 0.2s ease;
-    box-sizing: border-box;
+    border-radius: var(--radius-pill);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    box-shadow: var(--shadow-orange);
+    min-height: 48px;
 }
 
 .btn-ajuda:hover {
-    background: #00a3aa;
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-orange-lg);
 }
 
-@media (max-width: 768px) {
-    .ajuda-container {
-        padding: 1rem 0.5rem;
-        min-height: calc(100vh - 80px);
-    }
-
-    .ajuda-card {
-        padding: 2rem 1rem;
-        border-radius: 12px;
-        margin: 0 0.5rem;
-    }
-
-    .ajuda-card h1 {
-        font-size: 1.5rem;
-    }
-
-    .ajuda-card p {
-        font-size: 1rem;
-    }
-
+@media (prefers-reduced-motion: reduce) {
     .btn-ajuda {
-        padding: 0.75rem 2rem;
-        font-size: 0.9rem;
+        transition: none;
+    }
+    .btn-ajuda:hover {
+        transform: none;
     }
 }

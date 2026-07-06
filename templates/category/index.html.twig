@@ -8,28 +8,46 @@
 
 {% block body %}
 <div class="category-page">
-    <h1 class="page-title">Categorias</h1>
-    <p class="page-subtitle">Explore por tipo de produto</p>
+    {{ include('components/breadcrumb.html.twig', {
+        items: [
+            { label: 'Início', url: path('home_index') },
+            { label: 'Categorias' }
+        ]
+    }) }}
+
+    <div class="category-header">
+        <div>
+            <h1 class="category-title">Categorias</h1>
+            <p class="category-subtitle">Explore por tipo de produto</p>
+        </div>
+        {% if categorias|length > 0 %}
+        <span class="category-count">{{ categorias|length }} categoria{{ categorias|length > 1 ? 's' : '' }}</span>
+        {% endif %}
+    </div>
 
     {% if categorias is empty %}
-        <p class="no-data">Nenhuma categoria disponível.</p>
+        <div class="category-empty">
+            <svg width="64" height="64" viewBox="0 0 64 64" fill="none"><rect x="12" y="12" width="40" height="40" rx="8" stroke="var(--color-border)" stroke-width="2" fill="none"/><path d="M24 28h16M24 36h10" stroke="var(--color-border)" stroke-width="2" stroke-linecap="round"/></svg>
+            <p>Nenhuma categoria disponível.</p>
+        </div>
     {% else %}
         <div class="category-grid">
             {% for categoria in categorias %}
-                <div class="category-card">
+                <a href="{{ path('product_by_category', {id: categoria.id}) }}" class="category-card">
                     {% if categoria.iconeUrl %}
-                        <img src="{{ asset(categoria.iconeUrl) }}" alt="{{ categoria.nome }}" class="category-icon">
+                        <img src="{{ asset(categoria.iconeUrl) }}" alt="{{ categoria.nome }}" class="category-icon-img">
                     {% else %}
-                        <div class="category-icon category-icon-default">
-                            {{ categoria.nome|first|upper }}
-                        </div>
+                        <div class="category-icon-letter">{{ categoria.nome|first|upper }}</div>
                     {% endif %}
                     <h3 class="category-name">{{ categoria.nome }}</h3>
                     {% if categoria.descricao %}
                         <p class="category-description">{{ categoria.descricao|slice(0, 80) }}{% if categoria.descricao|length > 80 %}...{% endif %}</p>
                     {% endif %}
-                    <a href="{{ path('product_by_category', {slug: categoria.id}) }}" class="btn-primary">Ver produtos</a>
-                </div>
+                    <span class="category-card-cta">
+                        Ver produtos
+                        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3 7h8M8 4l3 3-3 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    </span>
+                </a>
             {% endfor %}
         </div>
     {% endif %}

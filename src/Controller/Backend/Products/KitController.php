@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Controller\Backend;
+namespace App\Controller\Backend\Products;
 
 use App\Dto\Response\KitResponse;
 use App\Service\KitService;
@@ -20,7 +20,7 @@ class KitController extends AbstractController
     ) {
     }
 
-    #[Route(name: 'list', methods: ['GET'])]
+    #[Route(name: '/list', methods: ['GET'])]
     public function list(): JsonResponse
     {
         $kits = $this->kitService->listKitsDisponiveis();

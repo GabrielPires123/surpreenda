@@ -23,13 +23,14 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 class AssinaturaController extends AbstractController
 {
     public function __construct(
-        private readonly KitService $kitService,
-        private readonly PetService $petService,
-        private readonly AssinaturaService $assinaturaService,
-    ) {
+        private KitService        $kitService,
+        private PetService        $petService,
+        private AssinaturaService $assinaturaService,
+    )
+    {
     }
 
-    private function getUserId(): int
+    private function getUserId(): string
     {
         /** @var User $user */
         $user = $this->getUser();

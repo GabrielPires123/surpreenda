@@ -20,18 +20,18 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 class PetController extends AbstractController
 {
     public function __construct(
-        private readonly PetService $petService,
+        private PetService $petService,
     ) {
     }
 
-    #[Route(methods: ['GET'], name: 'list')]
+    #[Route(name: 'list', methods: ['GET'])]
     public function list(): JsonResponse
     {
         /** @var User $user */
         $user = $this->getUser();
 
         try {
-            $pets = $this->petService->getPetsByUserId($user->getId());
+            $pets = $this->petService->getPetsByUserId((int)$user->getId());
         } catch (\InvalidArgumentException $e) {
             return new JsonResponse(['error' => $e->getMessage()], Response::HTTP_NOT_FOUND);
         }
@@ -39,7 +39,7 @@ class PetController extends AbstractController
         return new JsonResponse(array_map(fn($pet) => PetResponse::fromEntity($pet), $pets));
     }
 
-    #[Route('/{id}', methods: ['GET'], name: 'show')]
+    #[Route('/{id}', name: 'show', methods: ['GET'])]
     public function show(string $id): JsonResponse
     {
         $pet = $this->petService->getPetById($id);

@@ -8,37 +8,62 @@
 
 {% block body %}
 <div class="kit-page">
-    <h1 class="page-title">Nossos Kits</h1>
-    <p class="page-subtitle">Escolha o kit perfeito para o seu pet</p>
+    {{ include('components/breadcrumb.html.twig', {
+        items: [
+            { label: 'Início', url: path('home_index') },
+            { label: 'Kits' }
+        ]
+    }) }}
+
+    <div class="kit-header">
+        <div>
+            <h1 class="kit-page-title">Nossos Kits</h1>
+            <p class="kit-page-subtitle">Assinaturas mensais com tudo que seu pet ama</p>
+        </div>
+        {% if kits|length > 0 %}
+        <span class="kit-count">{{ kits|length }} kit{{ kits|length > 1 ? 's' : '' }}</span>
+        {% endif %}
+    </div>
 
     {% if kits is empty %}
-        <p class="no-data">Nenhum kit disponível no momento.</p>
+        <div class="kit-empty">
+            <svg width="64" height="64" viewBox="0 0 64 64" fill="none"><rect x="12" y="24" width="40" height="32" rx="4" stroke="var(--color-border)" stroke-width="2" fill="none"/><path d="M12 32h40M24 24V16a8 8 0 1 1 16 0v8" stroke="var(--color-border)" stroke-width="2" stroke-linecap="round"/></svg>
+            <p>Nenhum kit disponível no momento.</p>
+        </div>
     {% else %}
         <div class="kit-grid">
             {% for kit in kits %}
-                <div class="kit-card">
+                <a href="{{ path('kit_show', { id: kit.id }) }}" class="kit-card">
                     <div class="kit-image-wrapper">
                         {% if kit.imagemUrl %}
-                            <img src="{{ asset(kit.imagemUrl) }}" alt="{{ kit.nome }}" class="kit-main-image">
+                            <img src="{{ asset(kit.imagemUrl) }}" alt="{{ kit.nome }}" loading="lazy">
                         {% else %}
-                            <img src="{{ asset('3f8d2b61c81f6a1fb9deb8627ce294df1a516f9e.jpg') }}" alt="{{ kit.nome }}" class="kit-main-image">
+                            <img src="{{ asset('3f8d2b61c81f6a1fb9deb8627ce294df1a516f9e.jpg') }}" alt="{{ kit.nome }}" loading="lazy">
                         {% endif %}
                     </div>
+
                     <div class="kit-info">
-                        <h3 class="kit-name">{{ kit.nome }}</h3>
-                        {% if kit.descricao %}
-                            <p class="kit-description">{{ kit.descricao|slice(0, 100) }}{% if kit.descricao|length > 100 %}...{% endif %}</p>
+                        {% set firstCategoria = kit.categorias|length > 0 ? kit.categorias|first : null %}
+                        {% if firstCategoria %}
+                        <span class="kit-card-category">{{ firstCategoria.nome }}</span>
                         {% endif %}
-                        <div class="kit-meta">
-                            <span class="kit-items-count">{{ kit.quantidadeItens }} itens</span>
+                        <h2 class="kit-name">{{ kit.nome }}</h2>
+
+                        <div class="kit-price-block">
                             <span class="kit-price">R$ {{ kit.preco|number_format(2, ',', '.') }}</span>
+                            <span class="kit-price-period">/mês</span>
                         </div>
-                        <div class="kit-actions">
-                            <a href="{{ path('kit_show', {id: kit.id}) }}" class="btn-secondary">Ver detalhes</a>
-                            <a href="{{ path('carrinho_adicionar', {kitId: kit.id}) }}" class="btn-primary">Adicionar ao carrinho</a>
-                        </div>
+
+                        {% if kit.quantidadeItens %}
+                        <span class="kit-items-badge">{{ kit.quantidadeItens }} itens</span>
+                        {% endif %}
+
+                        <span class="kit-btn-add" role="button" tabindex="0" data-add-to-cart="{{ kit.id }}" data-item-name="{{ kit.nome }}" data-item-type="kit">
+                            <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M5 5h9M5 5a1.5 1.5 0 1 1-3 0m3 0a1.5 1.5 0 1 0-3 0m9 0a1.5 1.5 0 1 1-3 0m3 0a1.5 1.5 0 1 0-3 0M2.5 5l1 7.5h9.5l1-7.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                            Assinar Kit
+                        </span>
                     </div>
-                </div>
+                </a>
             {% endfor %}
         </div>
     {% endif %}

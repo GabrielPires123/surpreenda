@@ -1,0 +1,67 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Pedido #{{ pedido.id|slice(-6)|upper }} - Surpreenda Pet{% endblock %}
+
+{% block stylesheets %}
+<link rel="stylesheet" href="{{ asset('styles/pedido/pedido.css') }}">
+{% endblock %}
+
+{% block body %}
+<div class="pedido-show-page">
+    {{ include('components/breadcrumb.html.twig', {
+        items: [
+            { label: 'Início', url: path('home_index') },
+            { label: 'Meus Pedidos', url: path('pedido_index') },
+            { label: 'Pedido #' ~ pedido.id|slice(-6)|upper }
+        ]
+    }) }}
+
+    <div class="pedido-detail-card">
+        <div class="pedido-detail-header">
+            <h1 class="pedido-detail-title">Pedido #{{ pedido.id|slice(-6)|upper }}</h1>
+            <span class="pedido-detail-status status-{{ pedido.status.value }}">
+                {{ pedido.status.value|trans }}
+            </span>
+        </div>
+
+        <div class="pedido-detail-body">
+            <div class="detail-row">
+                <span class="detail-label">Data do Pedido:</span>
+                <span class="detail-value">{{ pedido.dataCriacao|date('d/m/Y H:i') }}</span>
+            </div>
+
+            <div class="detail-row">
+                <span class="detail-label">Kit:</span>
+                <span class="detail-value">{{ pedido.kit.nome }}</span>
+            </div>
+
+            <div class="detail-row">
+                <span class="detail-label">Pet:</span>
+                {% if pedido.pet %}
+                    <span class="detail-value">{{ pedido.pet.nome }}</span>
+                {% else %}
+                    <span class="detail-value detail-muted">Não informado</span>
+                {% endif %}
+            </div>
+
+            <div class="detail-row">
+                <span class="detail-label">Valor:</span>
+                <span class="detail-value price-value">R$ {{ pedido.kit.preco|number_format(2, ',', '.') }}</span>
+            </div>
+
+            {% if pedido.assinatura %}
+                <div class="detail-row">
+                    <span class="detail-label">Assinatura:</span>
+                    <span class="detail-value">
+                        <a href="{{ path('assinatura_index') }}" class="detail-link">Ver assinatura</a>
+                    </span>
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="pedido-detail-actions">
+            <a href="{{ path('pedido_index') }}" class="btn-back-link">Voltar para Meus Pedidos</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

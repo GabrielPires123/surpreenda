@@ -13,7 +13,7 @@
     <div class="cadastro-card">
         <h2 class="cadastro-title">Cadastro de<br><span>Pet</span></h2>
 
-        <form class="cadastro-form" method="POST">
+        <form class="cadastro-form" method="POST" novalidate>
             <input type="hidden" name="_csrf_token" value="{{ csrf_token('cadastro_pet') }}">
 
             <div class="cadastro-field">
@@ -39,6 +39,11 @@
             <div class="cadastro-field">
                 <label for="pet-peso">Peso (kg)</label>
                 <input type="number" id="pet-peso" name="peso" step="0.01" min="0" placeholder="0.00">
+            </div>
+
+            <div class="cadastro-field">
+                <label for="pet-idade">Idade (meses)</label>
+                <input type="number" id="pet-idade" name="idade" min="0" placeholder="0">
             </div>
 
             <button type="submit" class="cadastro-btn">CADASTRAR</button>

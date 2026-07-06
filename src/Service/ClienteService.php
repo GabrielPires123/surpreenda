@@ -15,11 +15,12 @@ use App\Validator\EntityValidator;
 class ClienteService implements ClienteServiceInterface
 {
     public function __construct(
-        private readonly ClienteRepositoryInterface $clienteRepository,
-        private readonly EnderecoRepositoryInterface $enderecoRepository,
-        private readonly TelefoneRepositoryInterface $telefoneRepository,
-        private readonly EntityValidator $entityValidator,
-    ) {
+        private ClienteRepositoryInterface  $clienteRepository,
+        private EnderecoRepositoryInterface $enderecoRepository,
+        private TelefoneRepositoryInterface $telefoneRepository,
+        private EntityValidator             $entityValidator,
+    )
+    {
     }
 
     /**
@@ -209,9 +210,9 @@ class ClienteService implements ClienteServiceInterface
         }
 
         return substr($cpf, 0, 3) . '.' .
-               substr($cpf, 3, 3) . '.' .
-               substr($cpf, 6, 3) . '-' .
-               substr($cpf, 9, 2);
+            substr($cpf, 3, 3) . '.' .
+            substr($cpf, 6, 3) . '-' .
+            substr($cpf, 9, 2);
     }
 
     /**
@@ -236,22 +237,22 @@ class ClienteService implements ClienteServiceInterface
         // Validate first digit
         $sum = 0;
         for ($i = 0; $i < 9; $i++) {
-            $sum += (int) $cpf[$i] * (10 - $i);
+            $sum += (int)$cpf[$i] * (10 - $i);
         }
         $remainder = $sum % 11;
         $firstDigit = $remainder < 2 ? 0 : 11 - $remainder;
-        if ((int) $cpf[9] !== $firstDigit) {
+        if ((int)$cpf[9] !== $firstDigit) {
             return false;
         }
 
         // Validate second digit
         $sum = 0;
         for ($i = 0; $i < 10; $i++) {
-            $sum += (int) $cpf[$i] * (11 - $i);
+            $sum += (int)$cpf[$i] * (11 - $i);
         }
         $remainder = $sum % 11;
         $secondDigit = $remainder < 2 ? 0 : 11 - $remainder;
-        if ((int) $cpf[10] !== $secondDigit) {
+        if ((int)$cpf[10] !== $secondDigit) {
             return false;
         }
 

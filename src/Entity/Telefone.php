@@ -13,7 +13,7 @@ class Telefone
     use UuidTrait;
 
     #[ORM\Column(length: 2)]
-    private string $ddd;
+    private string $ddd = '11';
 
     #[ORM\Column(length: 9)]
     private string $numero;
@@ -62,7 +62,7 @@ class Telefone
         return $this->cliente;
     }
 
-    public function setCliente(Cliente $cliente): static
+    public function setCliente(?Cliente $cliente): static
     {
         $this->cliente = $cliente;
         return $this;

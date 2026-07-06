@@ -8,56 +8,92 @@
 
 {% block body %}
 <div class="carrinho-page">
-    <h1 class="page-title">Seu Carrinho</h1>
+    {{ include('components/breadcrumb.html.twig', {
+        items: [
+            { label: 'Início', url: path('home_index') },
+            { label: 'Carrinho' }
+        ]
+    }) }}
 
-    {% for msg in app.flashes('success') %}
-        <div class="flash-success">{{ msg }}</div>
-    {% endfor %}
-    {% for msg in app.flashes('error') %}
-        <div class="flash-error">{{ msg }}</div>
-    {% endfor %}
+    <h1 class="carrinho-title">Seu Carrinho</h1>
 
-    {% if itens is empty %}
-        <p class="carrinho-empty">Seu carrinho está vazio.</p>
-        <a href="{{ path('kit_index') }}" class="btn-primary">Ver Kits</a>
+    {% if kitsData is empty %}
+        <div class="carrinho-empty">
+            <svg width="64" height="64" viewBox="0 0 64 64" fill="none"><path d="M18 22h36M18 22a4 4 0 1 1-8 0m8 0a4 4 0 1 0-8 0m36 0a4 4 0 1 1-8 0m8 0a4 4 0 1 0-8 0M10 22l4 24h30l4-24" stroke="var(--color-border)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/><path d="M26 36a6 6 0 0 0 12 0" stroke="var(--color-border)" stroke-width="2" stroke-linecap="round"/></svg>
+            <p>Seu carrinho está vazio</p>
+            <a href="{{ path('kit_index') }}" class="carrinho-empty-cta">Conheça nossos Kits</a>
+        </div>
     {% else %}
-        <div class="carrinho-items">
-            {% for kitId, quantidade in itens %}
-                {% set kit = source('carrinho_item', kitId) %}
-                <div class="carrinho-item">
-                    <div class="carrinho-item-info">
-                        {% if kit.imagemUrl %}
-                            <img src="{{ asset(kit.imagemUrl) }}" alt="{{ kit.nome }}" class="carrinho-item-image">
-                        {% else %}
-                            <img src="{{ asset('3f8d2b61c81f6a1fb9deb8627ce294df1a516f9e.jpg') }}" alt="{{ kit.nome }}" class="carrinho-item-image">
-                        {% endif %}
-                        <div class="carrinho-item-details">
-                            <h3 class="carrinho-item-name">{{ kit.nome }}</h3>
-                            <p class="carrinho-item-description">{{ kit.descricao|slice(0, 80) }}{% if kit.descricao|length > 80 %}...{% endif %}</p>
+        <div class="carrinho-layout">
+            {# Left: Items (65%) #}
+            <div class="carrinho-items">
+                {% for kitId, data in kitsData %}
+                    {% set entity = data.entity ?? data.kit %}
+                    {% set tipo = data.type ?? 'kit' %}
+                    {% set quantidade = data.quantidade %}
+                    <div class="carrinho-item" data-cart-item-id="{{ kitId }}" data-cart-item-type="{{ tipo }}">
+                        <div class="carrinho-item-image-wrap">
+                            {% if entity.imagemUrl %}
+                                <img src="{{ asset(entity.imagemUrl) }}" alt="{{ entity.nome }}" class="carrinho-item-image">
+                            {% else %}
+                                <img src="{{ asset('3f8d2b61c81f6a1fb9deb8627ce294df1a516f9e.jpg') }}" alt="{{ entity.nome }}" class="carrinho-item-image">
+                            {% endif %}
+                        </div>
+                        <div class="carrinho-item-body">
+                            <div class="carrinho-item-details">
+                                <h3 class="carrinho-item-name">{{ entity.nome }}</h3>
+                                {% if entity.descricao %}
+                                    <p class="carrinho-item-description">{{ entity.descricao|slice(0, 80) }}{% if entity.descricao|length > 80 %}...{% endif %}</p>
+                                {% endif %}
+                                {% if tipo == 'kit' %}
+                                    <span class="carrinho-item-type-badge">Assinatura mensal</span>
+                                {% endif %}
+                            </div>
+                            <div class="carrinho-item-right">
+                                <div class="carrinho-item-qty-controls">
+                                    <button type="button" class="qty-btn" data-qty-decrease="{{ kitId }}" aria-label="Diminuir quantidade">−</button>
+                                    <input type="number" name="quantidade" value="{{ quantidade }}" min="1" class="qty-input" data-qty-input="{{ kitId }}" aria-label="Quantidade">
+                                    <button type="button" class="qty-btn" data-qty-increase="{{ kitId }}" aria-label="Aumentar quantidade">+</button>
+                                </div>
+                                <span class="carrinho-item-price">R$ {{ (entity.preco * quantidade)|number_format(2, ',', '.') }}</span>
+                                <button type="button" class="btn-remove" data-cart-remove="{{ kitId }}" aria-label="Remover {{ entity.nome }}">
+                                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 4h12M5.33 4V2.67a1.33 1.33 0 0 1 1.34-1.34h2.66a1.33 1.33 0 0 1 1.34 1.34V4M3.33 4l.54 9.33h8.26l.54-9.33" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                                </button>
+                            </div>
                         </div>
                     </div>
-                    <div class="carrinho-item-actions">
-                        <form action="{{ path('carrinho_atualizar', {kitId: kit.id}) }}" method="POST" class="carrinho-item-qty">
-                            <input type="number" name="quantidade" value="{{ quantidade }}" min="1" class="qty-input">
-                            <button type="submit" class="btn-update">Atualizar</button>
-                        </form>
-                        <span class="carrinho-item-price">R$ {{ (kit.preco * quantidade)|number_format(2, ',', '.') }}</span>
-                        <a href="{{ path('carrinho_remover', {kitId: kit.id}) }}" class="btn-remove">Remover</a>
-                    </div>
-                </div>
-            {% endfor %}
-        </div>
+                {% endfor %}
+            </div>
 
-        <div class="carrinho-summary">
-            <div class="carrinho-total">
-                <strong>Total:</strong> R$ {{ total|number_format(2, ',', '.') }}
-            </div>
-            <div class="carrinho-actions">
-                <form action="{{ path('carrinho_limpar') }}" method="POST">
-                    <button type="submit" class="btn-clear">Limpar Carrinho</button>
-                </form>
-                <a href="{{ path('kit_index') }}" class="btn-secondary">Continuar Comprando</a>
-            </div>
+            {# Right: Order Summary (35%) — sticky #}
+            <aside class="carrinho-summary">
+                <h2 class="carrinho-summary-title">Resumo do Pedido</h2>
+                <div class="carrinho-summary-row">
+                    <span>Subtotal</span>
+                    <span>R$ {{ total|number_format(2, ',', '.') }}</span>
+                </div>
+                <div class="carrinho-summary-row">
+                    <span>Frete</span>
+                    <span class="carrinho-shipping-hint">Calculado no checkout</span>
+                </div>
+                <div class="carrinho-summary-divider"></div>
+                <div class="carrinho-summary-row carrinho-summary-total">
+                    <span>Total</span>
+                    <span>R$ {{ total|number_format(2, ',', '.') }}</span>
+                </div>
+
+                <a href="{{ path('checkout_index') }}" class="carrinho-btn-checkout">
+                    <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true"><rect x="2" y="5" width="14" height="10" rx="2" stroke="currentColor" stroke-width="1.3"/><path d="M2 8h14M6 5V3" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+                    Ir para o Pagamento
+                </a>
+
+                <div class="carrinho-trust">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><rect x="2" y="7" width="12" height="7" rx="1.5" stroke="currentColor" stroke-width="1.2"/><path d="M5 7V4.5a3 3 0 0 1 6 0V7" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+                    <span>Pagamento seguro</span>
+                </div>
+
+                <a href="{{ path('kit_index') }}" class="carrinho-btn-back">← Voltar para os Kits</a>
+            </aside>
         </div>
     {% endif %}
 </div>

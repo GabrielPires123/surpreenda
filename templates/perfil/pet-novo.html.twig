@@ -1,0 +1,61 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Novo Pet - Surpreenda Pet{% endblock %}
+
+{% block stylesheets %}
+<link rel="stylesheet" href="{{ asset('styles/cadastro/cadastro.css') }}">
+{% endblock %}
+
+{% block body %}
+<div class="cadastro-pet-page">
+    {{ include('components/breadcrumb.html.twig', {
+        items: [
+            { label: 'Início', url: path('home_index') },
+            { label: 'Perfil', url: path('perfil_index') },
+            { label: 'Meus Pets', url: path('perfil_pets') },
+            { label: 'Novo Pet' }
+        ]
+    }) }}
+
+    <h1 class="page-title">Cadastrar Novo Pet</h1>
+
+    {% for message in app.flashes('error') %}
+        <div class="flash-error">{{ message }}</div>
+    {% endfor %}
+
+    <form method="POST" action="{{ path('perfil_pet_novo_post') }}" class="pet-form" novalidate>
+        <div class="form-group">
+            <label for="nome">Nome do Pet</label>
+            <input type="text" id="nome" name="nome" required placeholder="Ex: Rex">
+        </div>
+
+        <div class="form-group">
+            <label for="especie">Espécie</label>
+            <select id="especie" name="especie" required>
+                <option value="canino">Cão</option>
+                <option value="felino">Gato</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="raca">Raça</label>
+            <input type="text" id="raca" name="raca" placeholder="Ex: Labrador, Persa...">
+        </div>
+
+        <div class="form-group">
+            <label for="peso">Peso (kg)</label>
+            <input type="number" id="peso" name="peso" step="0.1" min="0" placeholder="Ex: 12.5">
+        </div>
+
+        <div class="form-group">
+            <label for="idade">Idade (meses)</label>
+            <input type="number" id="idade" name="idade" min="0" placeholder="Ex: 24">
+        </div>
+
+        <div class="form-actions">
+            <a href="{{ path('perfil_pets') }}" class="btn-cancelar">Cancelar</a>
+            <button type="submit" class="btn-submit">Cadastrar Pet</button>
+        </div>
+    </form>
+</div>
+{% endblock %}

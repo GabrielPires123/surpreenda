@@ -22,4 +22,7 @@ interface ProdutoRepositoryInterface extends ObjectRepository
 
     /** @return Produto[] */
     public function findByCategoria(string $categoriaId): array;
+
+    /** @return Produto[] */
+    public function search(string $query): array;
 }

@@ -1,0 +1,90 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Pedido Confirmado - Surpreenda Pet{% endblock %}
+
+{% block stylesheets %}
+<link rel="stylesheet" href="{{ asset('styles/checkout/checkout.css') }}">
+{% endblock %}
+
+{% block body %}
+<div class="checkout-page">
+    {{ include('components/breadcrumb.html.twig', {
+        items: [
+            { label: 'Início', url: path('home_index') },
+            { label: 'Checkout', url: path('checkout_index') },
+            { label: 'Pedido Confirmado' }
+        ]
+    }) }}
+
+    <div class="success-container">
+        <div class="success-icon">
+            <svg width="80" height="80" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="40" cy="40" r="38" fill="var(--color-green-light)" opacity="0.3"/>
+                <path d="M26 41l10 10 18-22" stroke="var(--color-green)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+        </div>
+
+        <h1 class="page-title success-title">Pedido Confirmado!</h1>
+        <p class="success-subtitle">Sua assinatura foi criada com sucesso.</p>
+
+        <div class="success-details">
+            <div class="detail-card">
+                <h2 class="detail-title">Detalhes do Pedido</h2>
+                <div class="detail-row">
+                    <span class="detail-label">Número do Pedido:</span>
+                    <span class="detail-value">#{{ pedido.id|slice(0, 8) }}</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Kit:</span>
+                    <span class="detail-value">{{ pedido.kit.nome }}</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Status:</span>
+                    <span class="detail-status status-{{ pedido.status.value }}">{{ pedido.statusLabel }}</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Data do Pedido:</span>
+                    <span class="detail-value">{{ pedido.dataPedido|date('d/m/Y') }}</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Total:</span>
+                    <span class="detail-value total-highlight">R$ {{ pedido.valorTotal|number_format(2, ',', '.') }}</span>
+                </div>
+                {% if pedido.codigoRastreio %}
+                    <div class="detail-row">
+                        <span class="detail-label">Código de Rastreio:</span>
+                        <span class="detail-value">{{ pedido.codigoRastreio }}</span>
+                    </div>
+                {% endif %}
+            </div>
+
+            {% if assinatura %}
+                <div class="detail-card">
+                    <h2 class="detail-title">Detalhes da Assinatura</h2>
+                    <div class="detail-row">
+                        <span class="detail-label">Plano:</span>
+                        <span class="detail-value">{{ assinatura.plano }}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Status:</span>
+                        <span class="detail-status status-{{ assinatura.status.value }}">{{ assinatura.statusLabel }}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Início:</span>
+                        <span class="detail-value">{{ assinatura.dataInicio|date('d/m/Y') }}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Próxima Cobrança:</span>
+                        <span class="detail-value">{{ assinatura.proximaCobranca|date('d/m/Y') }}</span>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="success-actions">
+            <a href="{{ path('perfil_index') }}" class="btn-primary">Ver Meus Pedidos</a>
+            <a href="{{ path('home_index') }}" class="btn-secondary">Voltar ao Início</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

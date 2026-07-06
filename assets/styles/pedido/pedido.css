@@ -1,0 +1,333 @@
+/* === Meus Pedidos Page — Premium Redesign === */
+
+.pedidos-page {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 0 1.5rem 3rem;
+}
+
+.page-title {
+    font-family: var(--font-heading);
+    font-size: var(--font-size-xl);
+    font-weight: 800;
+    color: var(--color-text);
+    margin-bottom: 0.25rem;
+}
+
+.page-subtitle {
+    font-size: var(--font-size-base);
+    color: var(--color-text-muted);
+    margin-bottom: 2rem;
+}
+
+.no-data-card {
+    background: var(--color-white);
+    border: 1px solid var(--color-border-soft);
+    border-radius: var(--radius-2xl);
+    box-shadow: var(--shadow-sm);
+    padding: 3rem 2rem;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.no-data-icon {
+    width: 64px;
+    height: 64px;
+    opacity: 0.3;
+}
+
+.no-data-text {
+    color: var(--color-text-muted);
+    font-size: var(--font-size-base);
+}
+
+/* === Pedido List === */
+.pedidos-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.pedido-card {
+    display: block;
+    background: var(--color-white);
+    border: 1px solid var(--color-border-soft);
+    border-radius: var(--radius-2xl);
+    box-shadow: var(--shadow-sm);
+    padding: 1.25rem 1.5rem;
+    text-decoration: none;
+    color: inherit;
+    transition: box-shadow var(--transition-base), transform var(--transition-base);
+}
+
+.pedido-card:hover {
+    box-shadow: var(--shadow-md);
+    transform: translateY(-2px);
+}
+
+.pedido-card {
+    animation: fade-in-up 0.4s var(--transition-smooth) both;
+}
+
+.pedido-card:nth-child(2) { animation-delay: 0.06s; }
+.pedido-card:nth-child(3) { animation-delay: 0.12s; }
+.pedido-card:nth-child(4) { animation-delay: 0.18s; }
+
+@keyframes fade-in-up {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.pedido-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.75rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid var(--color-border-soft);
+}
+
+.pedido-id-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.pedido-id {
+    font-family: var(--font-heading);
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--color-text);
+}
+
+.pedido-status {
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 0.25rem 0.75rem;
+    border-radius: var(--radius-pill);
+    text-transform: capitalize;
+}
+
+.status-pending {
+    background: var(--color-beige);
+    color: var(--color-text-muted);
+}
+
+.status-confirmed {
+    background: var(--color-blue-info);
+    color: var(--color-blue-info-dark);
+}
+
+.status-shipped {
+    background: var(--color-purple-shipped);
+    color: var(--color-purple-shipped-dark);
+}
+
+.status-delivered {
+    background: var(--color-green-sage);
+    color: var(--color-text);
+}
+
+.status-cancelled {
+    background: var(--color-red-error);
+    color: var(--color-red-error-dark);
+}
+
+.pedido-date {
+    font-size: var(--font-size-sm);
+    color: var(--color-text-muted);
+}
+
+.pedido-body {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.pedido-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.pedido-item-name {
+    font-size: var(--font-size-base);
+    font-weight: 600;
+    color: var(--color-text);
+}
+
+.pedido-item-price {
+    font-size: var(--font-size-base);
+    font-weight: 700;
+    color: #1F2937;
+}
+
+.pedido-pet-info {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: var(--font-size-sm);
+    color: var(--color-text-muted);
+}
+
+.pedido-pet-info svg {
+    flex-shrink: 0;
+}
+
+/* === Pedido Show Page === */
+.pedido-show-page {
+    max-width: 720px;
+    margin: 2rem auto;
+    padding: 0 1.5rem;
+}
+
+.pedido-detail-card {
+    background: var(--color-white);
+    border: 1px solid var(--color-border-soft);
+    border-radius: var(--radius-2xl);
+    box-shadow: var(--shadow-md);
+    overflow: hidden;
+    animation: fade-in-up 0.4s var(--transition-smooth) both;
+}
+
+.pedido-detail-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.5rem 2rem;
+    border-bottom: 1px solid var(--color-border-soft);
+    background: var(--color-beige-light);
+}
+
+.pedido-detail-title {
+    font-family: var(--font-heading);
+    font-size: 1.4rem;
+    font-weight: 800;
+    color: var(--color-text);
+    margin: 0;
+}
+
+.pedido-detail-status {
+    font-size: 0.8rem;
+    font-weight: 700;
+    padding: 0.35rem 1rem;
+    border-radius: var(--radius-pill);
+    text-transform: capitalize;
+}
+
+.pedido-detail-body {
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.detail-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid var(--color-border-soft);
+}
+
+.detail-row:last-child {
+    border-bottom: none;
+}
+
+.detail-label {
+    font-size: var(--font-size-sm);
+    font-weight: 600;
+    color: var(--color-text-muted);
+}
+
+.detail-value {
+    font-size: var(--font-size-base);
+    font-weight: 600;
+    color: var(--color-text);
+}
+
+.price-value {
+    color: #1F2937;
+    font-weight: 700;
+}
+
+.detail-link {
+    color: var(--color-green-sage);
+    text-decoration: underline;
+    transition: color var(--transition-fast);
+}
+
+.detail-link:hover {
+    color: #1F2937;
+}
+
+.detail-muted {
+    color: var(--color-text-muted);
+}
+
+.pedido-detail-actions {
+    padding: 1.5rem 2rem;
+    border-top: 1px solid var(--color-border-soft);
+    display: flex;
+    justify-content: center;
+}
+
+.btn-back-link {
+    font-family: var(--font-family);
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--color-green-sage);
+    text-decoration: none;
+    letter-spacing: 0.05em;
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    transition: color var(--transition-base), gap var(--transition-base);
+}
+
+.btn-back-link:hover {
+    color: var(--color-orange);
+    text-decoration: underline;
+    gap: 0.5rem;
+}
+
+/* === Responsive === */
+@media (max-width: 768px) {
+    .pedidos-page,
+    .pedido-show-page {
+        padding: 0 1rem 2rem;
+    }
+
+    .pedido-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+
+    .pedido-detail-header {
+        flex-direction: column;
+        gap: 0.75rem;
+        text-align: center;
+    }
+
+    .detail-row {
+        flex-direction: column;
+        gap: 0.25rem;
+        text-align: center;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .pedido-card,
+    .pedido-detail-card {
+        animation: none;
+    }
+
+    .pedido-card:hover {
+        transform: none;
+    }
+}

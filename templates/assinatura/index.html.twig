@@ -1,0 +1,84 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Minhas Assinaturas - Surpreenda Pet{% endblock %}
+
+{% block stylesheets %}
+<link rel="stylesheet" href="{{ asset('styles/assinatura/assinatura.css') }}">
+{% endblock %}
+
+{% block body %}
+<div class="assinaturas-page">
+    {{ include('components/breadcrumb.html.twig', {
+        items: [
+            { label: 'Início', url: path('home_index') },
+            { label: 'Minhas Assinaturas' }
+        ]
+    }) }}
+
+    <h1 class="page-title">Minhas Assinaturas</h1>
+    <p class="page-subtitle">Gerencie suas assinaturas mensais de kits para pets</p>
+
+    {% if assinaturas is empty %}
+        <div class="no-data-card">
+            <svg class="no-data-icon" width="64" height="64" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M21 8V21H3V8M1 3H23V5H1M10 12V16M8 14H12" stroke="var(--color-text-muted)" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+            <p class="no-data-text">Você ainda não possui nenhuma assinatura ativa.</p>
+            <a href="{{ path('kit_index') }}" class="btn-primary">Explorar Kits</a>
+        </div>
+    {% else %}
+        <div class="assinaturas-list">
+            {% for item in assinaturas %}
+                {% set assinatura = item.assinatura %}
+                <div class="assinatura-card">
+                    <div class="assinatura-header">
+                        <h3 class="assinatura-name">{{ assinatura.plano }}</h3>
+                        <span class="assinatura-badge status-{{ assinatura.status.value }}">
+                            {{ assinatura.status.value|capitalize }}
+                        </span>
+                    </div>
+
+                    <div class="assinatura-body">
+                        <div class="assinatura-info-row">
+                            <span class="info-label">Valor Mensal:</span>
+                            <span class="info-value">R$ {{ assinatura.valor|number_format(2, ',', '.') }}</span>
+                        </div>
+                        <div class="assinatura-info-row">
+                            <span class="info-label">Início:</span>
+                            <span class="info-value">{{ assinatura.dataInicio|date('d/m/Y') }}</span>
+                        </div>
+                        {% if assinatura.dataFim %}
+                            <div class="assinatura-info-row">
+                                <span class="info-label">Fim:</span>
+                                <span class="info-value">{{ assinatura.dataFim|date('d/m/Y') }}</span>
+                            </div>
+                        {% endif %}
+                        {% if item.proxima_cobranca %}
+                            <div class="assinatura-info-row">
+                                <span class="info-label">Próxima Cobrança:</span>
+                                {% if item.is_vencida %}
+                                    <span class="info-value vencida">Vencida ({{ item.proxima_cobranca|date('d/m/Y') }})</span>
+                                {% else %}
+                                    <span class="info-value">{{ item.proxima_cobranca|date('d/m/Y') }}</span>
+                                {% endif %}
+                            </div>
+                        {% endif %}
+                        {% if item.is_active %}
+                            <div class="assinatura-actions">
+                                <form method="POST" action="{{ path('assinatura_pausar', {id: assinatura.id}) }}">
+                                    <input type="hidden" name="_token" value="{{ csrf_token('pausar_' ~ assinatura.id) }}">
+                                    <button type="submit" class="btn-pausar">Pausar Assinatura</button>
+                                </form>
+                                <form method="POST" action="{{ path('assinatura_cancelar', {id: assinatura.id}) }}">
+                                    <input type="hidden" name="_token" value="{{ csrf_token('cancelar_' ~ assinatura.id) }}">
+                                    <button type="submit" class="btn-cancelar-assinatura">Cancelar Assinatura</button>
+                                </form>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

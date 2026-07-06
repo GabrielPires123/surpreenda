@@ -13,9 +13,9 @@ use App\Validator\EntityValidator;
 class PetService implements PetServiceInterface
 {
     public function __construct(
-        private readonly PetRepositoryInterface $petRepository,
-        private readonly ClienteRepositoryInterface $clienteRepository,
-        private readonly EntityValidator $entityValidator,
+        private PetRepositoryInterface     $petRepository,
+        private ClienteRepositoryInterface $clienteRepository,
+        private EntityValidator            $entityValidator,
     ) {
     }
 

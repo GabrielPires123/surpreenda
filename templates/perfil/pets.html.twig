@@ -1,0 +1,46 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Meus Pets - Surpreenda Pet{% endblock %}
+
+{% block stylesheets %}
+<link rel="stylesheet" href="{{ asset('styles/perfil/perfil.css') }}">
+{% endblock %}
+
+{% block body %}
+<div class="perfil-page">
+    {{ include('components/breadcrumb.html.twig', {
+        items: [
+            { label: 'Início', url: path('home_index') },
+            { label: 'Perfil', url: path('perfil_index') },
+            { label: 'Meus Pets' }
+        ]
+    }) }}
+
+    <h1 class="page-title">Meus Pets</h1>
+
+    <div class="perfil-actions">
+        <a href="{{ path('perfil_pet_novo') }}" class="btn-perfil-editar">+ Adicionar Pet</a>
+    </div>
+
+    {% if pets is empty %}
+        <div class="empty-state">
+            <p class="empty-state-text">Nenhum pet cadastrado ainda.</p>
+            <a href="{{ path('perfil_pet_novo') }}" class="btn-perfil-editar">Cadastrar primeiro pet</a>
+        </div>
+    {% else %}
+        <div class="pets-grid">
+            {% for pet in pets %}
+                <div class="pet-card">
+                    <div class="pet-icon">{{ pet.tipo.value == 'dog' ? '🐕' : '🐈' }}</div>
+                    <h3 class="pet-name">{{ pet.nome }}</h3>
+                    <div class="pet-details">
+                        <span class="pet-detail">{{ pet.raca ?: 'Raça não informada' }}</span>
+                        <span class="pet-detail">{{ pet.peso }} kg</span>
+                        <span class="pet-detail">{{ pet.idadeMeses }} meses</span>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

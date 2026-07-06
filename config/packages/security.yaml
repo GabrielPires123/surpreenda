@@ -24,6 +24,7 @@ security:
             logout:
                 path: app_logout
                 target: home_index
+                enable_csrf: true
         api_login:
             pattern: ^/api/auth/login
             stateless: true

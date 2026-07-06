@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Cadastro - Surpreenda Pet{% endblock %}
+{% block title %}Criar Conta - Surpreenda Pet{% endblock %}
 
 {% block header %}{% endblock %}
 {% block footer %}{% endblock %}
@@ -11,49 +11,106 @@
 
 {% block body %}
 <section class="cadastro-page">
-    <div class="cadastro-illustration">
-        <img src="{{ asset('03b2b99b114b14ba1fa72b0df2b1a7fdc9bd0558.png') }}" alt="Cães Surpreenda Pet" class="cadastro-dogs-img">
+    {# Left panel: Branding image #}
+    <div class="cadastro-brand" aria-hidden="true">
+        <div class="cadastro-brand-overlay"></div>
+        <div class="cadastro-brand-content">
+            <svg class="cadastro-brand-paw" width="48" height="48" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <ellipse cx="50" cy="62" rx="22" ry="26" fill="currentColor"/>
+                <circle cx="28" cy="32" r="12" fill="currentColor"/>
+                <circle cx="72" cy="32" r="12" fill="currentColor"/>
+                <circle cx="18" cy="58" r="10" fill="currentColor"/>
+                <circle cx="82" cy="58" r="10" fill="currentColor"/>
+            </svg>
+            <p class="cadastro-brand-quote">Junte-se a +1.000 tutores criando memórias inesquecíveis com seus pets.</p>
+            <span class="cadastro-brand-author">Assinaturas mensais de kits DIY selecionados</span>
+        </div>
     </div>
-    <div class="cadastro-form-container">
-        <div class="cadastro-card">
-            <h2 class="cadastro-title-welcome">Welcome!</h2>
-            <form class="cadastro-form" method="POST">
+
+    {# Right panel: Form #}
+    <div class="cadastro-form-side">
+        <a href="{{ path('home_index') }}" class="cadastro-logo" aria-label="Surpreenda Pet - Página inicial">
+            <svg width="32" height="32" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <ellipse cx="50" cy="62" rx="22" ry="26" fill="currentColor"/>
+                <circle cx="28" cy="32" r="12" fill="currentColor"/>
+                <circle cx="72" cy="32" r="12" fill="currentColor"/>
+                <circle cx="18" cy="58" r="10" fill="currentColor"/>
+                <circle cx="82" cy="58" r="10" fill="currentColor"/>
+            </svg>
+            <span class="logo-text">Surpreenda <span class="logo-accent">Pet</span></span>
+        </a>
+
+        <div class="cadastro-form-container">
+            <h1 class="cadastro-heading">Crie sua conta</h1>
+            <p class="cadastro-subheading">Rápido, fácil e sem burocracia.</p>
+
+            {% for label, messages in app.flashes %}
+                {% for message in messages %}
+                    {% if label == 'error' %}
+                        <div class="cadastro-error" role="alert">
+                            <svg class="cadastro-error-icon" width="18" height="18" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V7a1 1 0 00-1-1z" clip-rule="evenodd"/>
+                            </svg>
+                            <span>{{ message }}</span>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            {% endfor %}
+
+            <form class="cadastro-form" method="POST" novalidate>
                 <input type="hidden" name="_csrf_token" value="{{ csrf_token('cadastro') }}">
 
-                <div class="cadastro-field">
-                    <label for="cadastro-nome">Nome *</label>
-                    <input type="text" id="cadastro-nome" name="nome" placeholder="Nome completo" required>
+                <div class="cadastro-row">
+                    <div class="cadastro-field">
+                        <label for="cadastro-nome" class="cadastro-label">Nome</label>
+                        <input type="text" id="cadastro-nome" name="nome" placeholder="Seu nome" required autocomplete="given-name">
+                    </div>
+                    <div class="cadastro-field">
+                        <label for="cadastro-sobrenome" class="cadastro-label">Sobrenome</label>
+                        <input type="text" id="cadastro-sobrenome" name="sobrenome" placeholder="Seu sobrenome" required autocomplete="family-name">
+                    </div>
                 </div>
 
                 <div class="cadastro-field">
-                    <label for="cadastro-sobrenome">Sobrenome *</label>
-                    <input type="text" id="cadastro-sobrenome" name="sobrenome" placeholder="Sobrenome" required>
+                    <label for="cadastro-email" class="cadastro-label">E-mail</label>
+                    <input type="email" id="cadastro-email" name="email" placeholder="seu@email.com" required autocomplete="email" inputmode="email">
                 </div>
 
                 <div class="cadastro-field">
-                    <label for="cadastro-email">Email *</label>
-                    <input type="email" id="cadastro-email" name="email" placeholder="email@exemplo.com" required>
+                    <label for="cadastro-senha" class="cadastro-label">Senha</label>
+                    <div class="cadastro-password-wrap">
+                        <input type="password" id="cadastro-senha" name="senha" placeholder="Mínimo 8 caracteres" required minlength="8" autocomplete="new-password">
+                        <button type="button" class="cadastro-toggle-pw" aria-label="Mostrar senha" data-toggle-pw>
+                            <svg class="icon-eye" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                                <circle cx="12" cy="12" r="3"/>
+                            </svg>
+                            <svg class="icon-eye-off" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" style="display:none">
+                                <path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19m-6.72-1.07a3 3 0 11-4.24-4.24"/>
+                                <line x1="1" y1="1" x2="23" y2="23"/>
+                            </svg>
+                        </button>
+                    </div>
                 </div>
 
-                <div class="cadastro-field">
-                    <label for="cadastro-cpf">CPF *</label>
-                    <input type="text" id="cadastro-cpf" name="cpf" placeholder="000.000.000-00" required pattern="\d{3}\.?\d{3}\.?\d{3}-?\d{2}">
-                </div>
-
-                <div class="cadastro-field">
-                    <label for="cadastro-senha">Senha *</label>
-                    <input type="password" id="cadastro-senha" name="senha" placeholder="Mínimo 8 caracteres" required minlength="8">
-                </div>
-
-                <div class="cadastro-field">
-                    <label for="cadastro-senha-confirm">Confirmar Senha *</label>
-                    <input type="password" id="cadastro-senha-confirm" name="senha_confirm" placeholder="Repita a senha" required minlength="8">
-                </div>
-
-                <button type="submit" class="cadastro-btn">Cadastrar</button>
+                <button type="submit" class="cadastro-btn">Criar Conta</button>
             </form>
 
-            <p class="cadastro-login-link">Já tem uma conta? <a href="{{ path('home_login') }}">Faça login</a></p>
+            <div class="cadastro-divider">
+                <span>ou</span>
+            </div>
+
+            <a href="#" class="cadastro-social-btn" aria-label="Continuar com o Google">
+                <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 01-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" fill="#4285F4"/>
+                    <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+                    <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.65-2.05.01-.78z" fill="#FBBC05"/>
+                    <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+                </svg>
+                Continuar com o Google
+            </a>
+
+            <p class="cadastro-login">Já tem uma conta? <a href="{{ path('home_login') }}" class="cadastro-login-link">Faça login</a></p>
         </div>
     </div>
 </section>

@@ -7,54 +7,160 @@
 {% endblock %}
 
 {% block body %}
-<div class="product-show">
-    <div class="product-detail-card">
-        <div class="product-detail-left">
-            <div class="product-image-wrapper">
+<div class="pdp-page">
+    {{ include('components/breadcrumb.html.twig', {
+        items: [
+            { label: 'Início', url: path('home_index') },
+            { label: 'Produtos', url: path('product_index') },
+            { label: produto.categoria.nome, url: path('product_by_category', {id: produto.categoria.id }) },
+            { label: produto.nome }
+        ]
+    }) }}
+
+    <div class="pdp-grid">
+        <div class="pdp-image-col">
+            <div class="pdp-image-frame">
                 {% if produto.imagemUrl %}
-                    <img src="{{ asset(produto.imagemUrl) }}" alt="{{ produto.nome }}" class="product-main-image">
+                    <img src="{{ asset(produto.imagemUrl) }}" alt="{{ produto.nome }}" class="pdp-main-image">
                 {% else %}
-                    <img src="{{ asset('3f8d2b61c81f6a1fb9deb8627ce294df1a516f9e.jpg') }}" alt="{{ produto.nome }}" class="product-main-image">
+                    <img src="{{ asset('3f8d2b61c81f6a1fb9deb8627ce294df1a516f9e.jpg') }}" alt="{{ produto.nome }}" class="pdp-main-image">
                 {% endif %}
-            </div>
-            <div class="image-indicators">
-                <span class="indicator-dot active"></span>
             </div>
         </div>
 
-        <div class="product-detail-right">
-            <div class="product-category-badge">
-                {{ produto.categoria.nome }}
-            </div>
+        <div class="pdp-info-col">
+            {% if produto.categoria %}
+            <span class="pdp-card-category">{{ produto.categoria.nome }}</span>
+            {% endif %}
 
-            <h1 class="product-detail-title">{{ produto.nome }}</h1>
+            <h1 class="pdp-title">{{ produto.nome }}</h1>
 
-            <div class="product-price-block">
-                <span class="product-detail-price">R$ {{ produto.precoVenda|number_format(2, ',', '.') }}</span>
-                {% if produto.precoCusto > 0 and produto.precoVenda > produto.precoCusto %}
-                    {% set desconto = ((produto.precoVenda - produto.precoCusto) / produto.precoVenda * 100)|round(0) %}
-                    {% if desconto > 0 %}
-                        <span class="product-discount-badge">{{ desconto }}% OFF</span>
+            <div class="pdp-price-block">
+                {% if produto.precoCusto > 0 and produto.precoCusto > produto.precoVenda %}
+                <span class="pdp-price-original">De: R$ {{ produto.precoCusto|number_format(2, ',', '.') }}</span>
+                {% endif %}
+                <div class="pdp-price-current-row">
+                    <span class="pdp-price">R$ {{ produto.precoVenda|number_format(2, ',', '.') }}</span>
+                    {% if produto.precoCusto > 0 and produto.precoCusto > produto.precoVenda %}
+                        {% set desconto = ((produto.precoCusto - produto.precoVenda) / produto.precoCusto * 100)|round(0) %}
+                        {% if desconto > 0 %}
+                        <span class="pdp-discount-badge">{{ desconto }}% OFF</span>
+                        {% endif %}
                     {% endif %}
+                </div>
+                {% if produto.precoVenda > 0 %}
+                <span class="pdp-installments">ou 2x de R$ {{ (produto.precoVenda / 2)|number_format(2, ',', '.') }} sem juros</span>
                 {% endif %}
             </div>
 
             {% if produto.descricao %}
-                <p class="product-detail-description">
-                {{ produto.descricao }}
-                </p>
+                <p class="pdp-description">{{ produto.descricao }}</p>
             {% endif %}
 
-            {% if produto.estoque > 0 %}
-                <span class="product-stock-status product-stock-available">Em estoque ({{ produto.estoque }})</span>
-            {% else %}
-                <span class="product-stock-status product-stock-unavailable">Indisponível</span>
-            {% endif %}
+            <div class="pdp-stock">
+                {% if produto.estoque > 0 %}
+                    <span class="pdp-stock-available">
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7" stroke="var(--color-green)" stroke-width="1.5"/><path d="M5.5 8.5l2 2 3-4" stroke="var(--color-green)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        Em estoque ({{ produto.estoque }} unidades prontas para envio)
+                    </span>
+                {% else %}
+                    <span class="pdp-stock-unavailable">
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7" stroke="var(--color-red-error)" stroke-width="1.5"/><path d="M5.5 5.5l5 5M10.5 5.5l-5 5" stroke="var(--color-red-error)" stroke-width="1.5" stroke-linecap="round"/></svg>
+                        Indisponível
+                    </span>
+                {% endif %}
+            </div>
 
             {% if produto.estoque > 0 %}
-            <a href="#" class="btn-buy">Comprar</a>
+            <div class="pdp-quantity">
+                <span class="pdp-quantity-label">Quantidade</span>
+                <div class="pdp-quantity-stepper">
+                    <button class="pdp-qty-btn pdp-qty-minus" type="button" aria-label="Diminuir quantidade">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="6" y1="12" x2="18" y2="12"/></svg>
+                    </button>
+                    <span class="pdp-qty-value" id="pdp-qty">1</span>
+                    <button class="pdp-qty-btn pdp-qty-plus" type="button" aria-label="Aumentar quantidade">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="6" x2="12" y2="18"/><line x1="6" y1="12" x2="18" y2="12"/></svg>
+                    </button>
+                </div>
+            </div>
+
+            <div class="pdp-actions">
+                <button class="pdp-btn-buy" data-add-to-cart="{{ produto.id }}" data-item-name="{{ produto.nome }}" data-item-type="produto" data-quantity="1" type="button">
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M6 6h10M6 6a2 2 0 1 1-4 0m4 0a2 2 0 1 0-4 0m12 0a2 2 0 1 1-4 0m4 0a2 2 0 1 0-4 0M3 6l1.5 10h11L17 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    Adicionar ao Carrinho
+                </button>
+            </div>
             {% endif %}
+
+            <div class="pdp-trust-badges">
+                <div class="pdp-trust-item">
+                    <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M9 1l2.5 5 5.5.8-4 3.9.9 5.3L9 13.3 4.1 16l.9-5.3-4-3.9L6.5 6z" stroke="var(--color-green-sage)" stroke-width="1.2" fill="none"/></svg>
+                    <span>Garantia de qualidade</span>
+                </div>
+                <div class="pdp-trust-item">
+                    <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><rect x="2" y="4" width="14" height="11" rx="2" stroke="var(--color-green-sage)" stroke-width="1.2" fill="none"/><path d="M2 7h14M6 4V2M12 4V2" stroke="var(--color-green-sage)" stroke-width="1.2" stroke-linecap="round"/></svg>
+                    <span>Entrega rápida</span>
+                </div>
+                <div class="pdp-trust-item">
+                    <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M9 1.5C5.5 1.5 2 4 2 8c0 2.5 2 5 6.5V17l2-2 2 2v-2.5c3-1.5 5-4 5-6.5 0-4-3.5-6.5-7-6.5z" stroke="var(--color-green-sage)" stroke-width="1.2" fill="none"/><circle cx="9" cy="7.5" r="2" stroke="var(--color-green-sage)" stroke-width="1.2" fill="none"/></svg>
+                    <span>Compra segura</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {# === Product Details Section (below the fold) === #}
+    <div class="pdp-details-section">
+        <h2 class="pdp-details-title">Detalhes do Produto</h2>
+        <div class="pdp-details-grid">
+            <div class="pdp-details-card">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--color-green-sage)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                <div>
+                    <strong>Material Seguro</strong>
+                    <p>Livre de toxinas e seguro para mordidas</p>
+                </div>
+            </div>
+            <div class="pdp-details-card">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--color-green-sage)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+                <div>
+                    <strong>Durabilidade Premium</strong>
+                    <p>Resistente a mordidas e desgaste diário</p>
+                </div>
+            </div>
+            <div class="pdp-details-card">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--color-green-sage)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+                <div>
+                    <strong>Feito com Amor</strong>
+                    <p>Desenvolvido por amantes de pets</p>
+                </div>
+            </div>
         </div>
     </div>
 </div>
+{% endblock %}
+
+{% block javascripts %}
+{{ parent() }}
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const qtyDisplay = document.getElementById('pdp-qty');
+    const minusBtn = document.querySelector('.pdp-qty-minus');
+    const plusBtn = document.querySelector('.pdp-qty-plus');
+    const buyBtn = document.querySelector('.pdp-btn-buy');
+
+    if (!qtyDisplay) return;
+
+    let qty = 1;
+
+    function updateQty(newQty) {
+        qty = Math.max(1, Math.min(newQty, 99));
+        qtyDisplay.textContent = qty;
+        if (buyBtn) buyBtn.dataset.quantity = qty;
+    }
+
+    if (minusBtn) minusBtn.addEventListener('click', () => updateQty(qty - 1));
+    if (plusBtn) plusBtn.addEventListener('click', () => updateQty(qty + 1));
+});
+</script>
 {% endblock %}

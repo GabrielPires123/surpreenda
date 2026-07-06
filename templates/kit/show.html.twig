@@ -7,54 +7,109 @@
 {% endblock %}
 
 {% block body %}
-<div class="kit-show">
-    <div class="kit-detail-card">
-        <div class="kit-detail-left">
-            <div class="kit-image-wrapper">
+<div class="kit-pdp-page">
+    {{ include('components/breadcrumb.html.twig', {
+        items: [
+            { label: 'Início', url: path('home_index') },
+            { label: 'Kits', url: path('kit_index') },
+            { label: kit.nome }
+        ]
+    }) }}
+
+    <div class="kit-pdp-grid">
+        <div class="kit-pdp-image-col">
+            <div class="kit-pdp-image-frame">
                 {% if kit.imagemUrl %}
-                    <img src="{{ asset(kit.imagemUrl) }}" alt="{{ kit.nome }}" class="kit-detail-image">
+                    <img src="{{ asset(kit.imagemUrl) }}" alt="{{ kit.nome }}" class="kit-pdp-main-image" loading="lazy">
                 {% else %}
-                    <img src="{{ asset('3f8d2b61c81f6a1fb9deb8627ce294df1a516f9e.jpg') }}" alt="{{ kit.nome }}" class="kit-detail-image">
+                    <img src="{{ asset('3f8d2b61c81f6a1fb9deb8627ce294df1a516f9e.jpg') }}" alt="{{ kit.nome }}" class="kit-pdp-main-image" loading="lazy">
                 {% endif %}
             </div>
         </div>
 
-        <div class="kit-detail-right">
-            <div class="kit-detail-badge">
-                {{ kit.quantidadeItens }} ITENS
+        <div class="kit-pdp-info-col">
+            <div class="kit-pdp-badges">
+                {% if kit.categorias|length > 0 %}
+                {% for categoria in kit.categorias %}
+                    <span class="kit-pdp-category-tag">{{ categoria.nome }}</span>
+                {% endfor %}
+                {% endif %}
+                <span class="kit-pdp-items-badge">{{ kit.quantidadeItens }} itens inclusos</span>
             </div>
 
-            <h1 class="kit-detail-title">{{ kit.nome }}</h1>
+            <h1 class="kit-pdp-title">{{ kit.nome }}</h1>
 
             {% if kit.descricao %}
-                <p class="kit-detail-description">{{ kit.descricao }}</p>
+                <p class="kit-pdp-description">{{ kit.descricao }}</p>
             {% endif %}
 
-            <div class="kit-detail-price-block">
-                <span class="kit-detail-price">R$ {{ kit.preco|number_format(2, ',', '.') }}</span>
+            <div class="kit-pdp-price-block">
+                {% if kit.produtos|length > 0 %}
+                    {% set totalAvulso = 0 %}
+                    {% for produto in kit.produtos %}
+                        {% set totalAvulso = totalAvulso + produto.precoVenda %}
+                    {% endfor %}
+                    {% if totalAvulso > kit.preco %}
+                    <span class="kit-pdp-price-original">Valor avulso: R$ {{ totalAvulso|number_format(2, ',', '.') }}</span>
+                    {% endif %}
+                {% endif %}
+                <div class="kit-pdp-price-current-row">
+                    <span class="kit-pdp-price">R$ {{ kit.preco|number_format(2, ',', '.') }}</span>
+                    <span class="kit-pdp-price-period">/mês</span>
+                </div>
+                {% if kit.produtos|length > 0 and totalAvulso is defined and totalAvulso > kit.preco %}
+                    {% set economia = totalAvulso - kit.preco %}
+                    <span class="kit-pdp-savings">Economia exclusiva do assinante: R$ {{ economia|number_format(2, ',', '.') }}/mês</span>
+                {% endif %}
             </div>
 
-            {% if kit.categorias|length > 0 %}
-                <div class="kit-detail-categorias">
-                    {% for categoria in kit.categorias %}
-                        <span class="categoria-tag">{{ categoria.nome }}</span>
-                    {% endfor %}
-                </div>
-            {% endif %}
+            <div class="kit-pdp-subscription-note">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7" stroke="var(--color-green-sage)" stroke-width="1.5"/><path d="M8 7.5v4M8 6a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5z" stroke="var(--color-green-sage)" stroke-width="1.25" stroke-linecap="round"/></svg>
+                <span>Assinatura mensal — cancele quando quiser</span>
+            </div>
 
             {% if kit.produtos|length > 0 %}
-                <div class="kit-produtos-list">
-                    <h3 class="kit-produtos-title">Contém:</h3>
-                    <ul>
+                <div class="kit-pdp-produtos">
+                    <h3 class="kit-pdp-produtos-title">O que vem na sua caixa este mês</h3>
+                    <ul class="kit-pdp-produtos-list">
                         {% for produto in kit.produtos %}
-                            <li>{{ produto.nome }} — R$ {{ produto.precoVenda|number_format(2, ',', '.') }}</li>
+                            <li>
+                                <span class="kit-produto-check">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--color-green-sage)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+                                </span>
+                                <span class="kit-produto-name">{{ produto.nome }}</span>
+                            </li>
                         {% endfor %}
                     </ul>
                 </div>
             {% endif %}
 
-            <a href="{{ path('carrinho_adicionar', {kitId: kit.id}) }}" class="btn-buy">Adicionar ao Carrinho</a>
-            <a href="{{ path('kit_index') }}" class="btn-back-link">Voltar para os Kits</a>
+            <div class="kit-pdp-actions">
+                <button class="kit-pdp-btn-buy" data-add-to-cart="{{ kit.id }}" data-item-name="{{ kit.nome }}" data-item-type="kit" type="button">
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M6 6h10M6 6a2 2 0 1 1-4 0m4 0a2 2 0 1 0-4 0m12 0a2 2 0 1 1-4 0m4 0a2 2 0 1 0-4 0M3 6l1.5 10h11L17 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    Assinar este Kit
+                </button>
+            </div>
+
+            <a href="{{ path('kit_index') }}" class="kit-pdp-link-back">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+                Voltar para a listagem de Kits
+            </a>
+
+            <div class="kit-pdp-trust">
+                <div class="kit-pdp-trust-item">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 1l2 4.5 5 .7-3.6 3.5.9 5L8 12.2 3.7 14.7l.9-5L1 6.2l5-.7z" stroke="var(--color-green-sage)" stroke-width="1.2" fill="none"/></svg>
+                    <span>Itens selecionados a dedo</span>
+                </div>
+                <div class="kit-pdp-trust-item">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="2" y="4" width="12" height="9" rx="1.5" stroke="var(--color-green-sage)" stroke-width="1.2" fill="none"/><path d="M2 7h12" stroke="var(--color-green-sage)" stroke-width="1.2"/></svg>
+                    <span>Entrega todo mês</span>
+                </div>
+                <div class="kit-pdp-trust-item">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M4 12l3-3 2 2 3-4" stroke="var(--color-green-sage)" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    <span>Cancele a qualquer hora</span>
+                </div>
+            </div>
         </div>
     </div>
 </div>

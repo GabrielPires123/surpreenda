@@ -1,90 +1,425 @@
-/* Product Page Styles */
-*, *::before, *::after {
-    box-sizing: border-box;
-}
+/* === PLP (Product Listing Page) — Redesign 2026 === */
 
-.product-page {
-    max-width: 1200px;
+/* ===== PAGE LAYOUT ===== */
+.plp-page {
+    max-width: 1280px;
     margin: 0 auto;
-    padding: 2rem 1rem;
-    font-family: 'Nunito', sans-serif;
+    padding: 1.5rem 1.5rem 3rem;
 }
 
-.product-grid {
+/* ===== PAGE HEADER ===== */
+.plp-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+}
+
+.plp-title {
+    font-family: var(--font-heading);
+    font-size: var(--font-size-2xl);
+    font-weight: 900;
+    color: var(--color-text);
+    letter-spacing: -0.01em;
+    margin: 0;
+}
+
+.plp-count {
+    font-size: var(--font-size-sm);
+    color: var(--color-text-muted);
+    margin: 0.25rem 0 0;
+}
+
+.plp-sort {
+    flex-shrink: 0;
+}
+
+.sort-select {
+    font-family: var(--font-family);
+    font-size: var(--font-size-sm);
+    font-weight: 600;
+    color: var(--color-text);
+    background: var(--color-white);
+    border: 1px solid var(--color-border-soft);
+    border-radius: var(--radius-md);
+    padding: 0.6rem 2rem 0.6rem 1rem;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236B7280' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0.75rem center;
+    cursor: pointer;
+    transition: border-color var(--transition-base);
+    min-height: 44px;
+}
+
+.sort-select:focus {
+    border-color: var(--color-green-sage);
+    outline: none;
+    box-shadow: var(--shadow-focus);
+}
+
+/* ===== LAYOUT: SIDEBAR + GRID ===== */
+.plp-layout {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    grid-template-columns: 220px 1fr;
+    gap: 2rem;
+    align-items: start;
+}
+
+/* ===== SIDEBAR ===== */
+.plp-sidebar {
+    position: sticky;
+    top: 90px;
+}
+
+.sidebar-toggle {
+    display: none;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: var(--font-heading);
+    font-size: var(--font-size-sm);
+    font-weight: 700;
+    color: var(--color-text);
+    background: var(--color-white);
+    border: 1px solid var(--color-border-soft);
+    border-radius: var(--radius-md);
+    padding: 0.6rem 1rem;
+    cursor: pointer;
+    width: 100%;
+    margin-bottom: 1rem;
+    min-height: 44px;
+}
+
+.sidebar-content {
+    background: var(--color-white);
+    border: 1px solid var(--color-border-soft);
+    border-radius: var(--radius-lg);
+    padding: 1.25rem;
+}
+
+.filter-group {
+    margin-bottom: 1.5rem;
+}
+
+.filter-group:last-child {
+    margin-bottom: 0;
+}
+
+.filter-heading {
+    font-family: var(--font-heading);
+    font-size: var(--font-size-xs);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--color-text-muted);
+    margin-bottom: 0.75rem;
+}
+
+.filter-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+}
+
+.filter-checkbox {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: var(--font-size-sm);
+    color: var(--color-text-soft);
+    cursor: pointer;
+    padding: 0.3rem 0;
+    transition: color var(--transition-base);
+    min-height: 36px;
+}
+
+.filter-checkbox:hover {
+    color: var(--color-text);
+}
+
+.filter-checkbox input[type="checkbox"] {
+    appearance: none;
+    width: 18px;
+    height: 18px;
+    border: 2px solid var(--color-border);
+    border-radius: 4px;
+    flex-shrink: 0;
+    position: relative;
+    cursor: pointer;
+    transition: border-color var(--transition-base), background var(--transition-base);
+}
+
+.filter-checkbox input[type="checkbox"]:checked {
+    border-color: var(--color-green-sage);
+    background: var(--color-green-sage);
+}
+
+.filter-checkbox input[type="checkbox"]:checked::after {
+    content: '';
+    position: absolute;
+    top: 2px;
+    left: 5px;
+    width: 4px;
+    height: 8px;
+    border: solid var(--color-white);
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+}
+
+.filter-checkbox.active {
+    color: var(--color-text);
+    font-weight: 600;
+}
+
+/* Sidebar overlay (mobile) */
+.sidebar-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(31, 41, 55, 0.3);
+    z-index: 40;
+}
+
+.sidebar-overlay.active {
+    display: block;
+}
+
+/* ===== PRODUCT GRID ===== */
+.plp-main {
+    min-width: 0;
+}
+
+.plp-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
     gap: 1.5rem;
 }
 
-.product-card {
-    background: #ffffff;
-    border: 1px solid #f4ead5;
-    border-radius: 20px;
-    padding: 1.5rem;
-    transition: box-shadow 0.2s;
+/* ===== PRODUCT CARD ===== */
+.plp-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    background: var(--color-white);
+    border: 1px solid var(--color-border-soft);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    text-decoration: none;
+    color: inherit;
+    transition: transform var(--transition-base), box-shadow var(--transition-base), border-color var(--transition-base);
 }
 
-.product-card:hover {
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+.plp-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-md);
 }
 
-.product-image {
-    width: 100%;
-    height: 200px;
-    background: #f4ead5;
-    border-radius: 10px;
-    margin-bottom: 1rem;
-}
-
-.product-name {
-    font-family: 'Nunito', sans-serif;
-    font-size: 1.25rem;
-    font-weight: 600;
-    color: #333333;
-    margin: 0 0 0.5rem;
-}
-
-.product-desc {
-    font-family: 'Nunito', sans-serif;
-    font-size: 0.875rem;
-    color: #333333;
-    opacity: 0.7;
-    margin-bottom: 1rem;
-}
-
-.product-price {
-    font-family: 'Nunito', sans-serif;
-    font-size: 1.5rem;
+/* --- Category label --- */
+.plp-card-category {
+    font-size: var(--font-size-xs);
     font-weight: 700;
-    color: #00c4cc;
-    display: block;
-    margin-bottom: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--color-text-muted);
+}
+
+/* --- Image --- */
+.plp-card-image {
+    position: relative;
+    aspect-ratio: 1 / 1;
+    background: var(--color-bg-warm);
+    overflow: hidden;
+}
+
+.plp-card-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.35s ease;
+}
+
+.plp-card:hover .plp-card-image img {
+    transform: scale(1.03);
+}
+
+/* --- Body --- */
+.plp-card-body {
+    padding: 1rem 1rem 0.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    flex: 1;
+}
+
+.plp-card-title {
+    font-family: var(--font-heading);
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--color-text);
+    line-height: 1.3;
+    margin: 0;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.plp-card-price {
+    font-family: var(--font-heading);
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #1F2937;
+    margin-top: 0.25rem;
+}
+
+.plp-card-price::before {
+    content: 'R$ ';
+    font-size: 0.8em;
+    font-weight: 600;
+}
+
+/* --- Add button --- */
+.plp-add-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: calc(100% - 2rem);
+    margin: 0.5rem 1rem 1rem;
+    padding: 0.65rem 1rem;
+    font-family: var(--font-heading);
+    font-size: var(--font-size-sm);
+    font-weight: 700;
+    color: var(--color-white);
+    background: var(--color-orange);
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: background var(--transition-base), transform var(--transition-fast), box-shadow var(--transition-base);
+    min-height: 42px;
+    box-sizing: border-box;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+.plp-add-btn:hover {
+    background: var(--color-orange-dark);
+    box-shadow: var(--shadow-orange);
+}
+
+.plp-add-btn:active {
+    transform: scale(0.97);
+}
+
+.plp-add-btn:focus-visible {
+    outline: 2px solid var(--color-green-sage);
+    outline-offset: 2px;
+}
+
+/* Prevent card link click when clicking add button */
+.plp-add-btn, .plp-add-btn * {
+    pointer-events: auto;
+}
+
+/* ===== EMPTY STATE ===== */
+.plp-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 4rem 1rem;
+    gap: 1rem;
+}
+
+.empty-title {
+    font-family: var(--font-heading);
+    font-size: var(--font-size-lg);
+    font-weight: 700;
+    color: var(--color-text);
+}
+
+.empty-text {
+    font-size: var(--font-size-sm);
+    color: var(--color-text-muted);
+    margin: 0;
+}
+
+.empty-link {
+    font-family: var(--font-heading);
+    font-size: var(--font-size-sm);
+    font-weight: 700;
+    color: var(--color-orange);
+    text-decoration: none;
+    transition: color var(--transition-base);
+    margin-top: 0.5rem;
+}
+
+.empty-link:hover {
+    color: var(--color-orange-dark);
+    text-decoration: underline;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 1024px) {
+    .plp-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
 }
 
 @media (max-width: 768px) {
-    .product-page {
-        padding: 1rem 0.75rem;
+    .plp-layout {
+        grid-template-columns: 1fr;
+        gap: 0;
     }
 
-    .product-grid {
-        grid-template-columns: 1fr;
+    .sidebar-toggle {
+        display: flex;
+    }
+
+    .sidebar-content {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        width: 280px;
+        z-index: 50;
+        border-radius: 0;
+        border-right: 1px solid var(--color-border-soft);
+        padding: 1.5rem;
+        overflow-y: auto;
+    }
+
+    .sidebar-content.open {
+        display: block;
+    }
+
+    .plp-grid {
+        grid-template-columns: repeat(2, 1fr);
         gap: 1rem;
     }
 
-    .product-card {
-        padding: 1rem;
-        border-radius: 14px;
+    .plp-header {
+        flex-direction: column;
+        align-items: flex-start;
     }
 
-    .product-image {
-        height: 160px;
+    .plp-title {
+        font-size: var(--font-size-xl);
+    }
+}
+
+@media (max-width: 480px) {
+    .plp-grid {
+        grid-template-columns: 1fr;
     }
 
-    .product-name {
-        font-size: 1.1rem;
-    }
-
-    .product-price {
-        font-size: 1.25rem;
+    .plp-card-image {
+        aspect-ratio: 4 / 3;
     }
 }

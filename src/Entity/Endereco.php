@@ -127,7 +127,7 @@ class Endereco
         return $this->cliente;
     }
 
-    public function setCliente(Cliente $cliente): static
+    public function setCliente(?Cliente $cliente): static
     {
         $this->cliente = $cliente;
         return $this;

@@ -1,0 +1,32 @@
+{# Breadcrumb component with Schema.org microdata
+   Usage: include('components/breadcrumb.html.twig', {
+       items: [
+           { label: 'Inicio', url: path('home_index') },
+           { label: 'Produtos', url: path('product_index') },
+           { label: 'Nome do Produto' }
+       ]
+   })
+   Note: omit url on the last item to mark it as the current page.
+#}
+{% if items is defined and items|length > 0 %}
+<nav aria-label="Breadcrumb" class="breadcrumb-nav">
+    <ol class="breadcrumb-list" itemscope itemtype="https://schema.org/BreadcrumbList">
+        {% for item in items %}
+        <li class="breadcrumb-item" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+            {% if item.url is defined and item.url %}
+                <a href="{{ item.url }}" itemprop="item">
+                    <span itemprop="name">{{ item.label }}</span>
+                </a>
+                <meta itemprop="position" content="{{ loop.index }}" />
+            {% else %}
+                <span itemprop="name" aria-current="page" class="breadcrumb-current">{{ item.label }}</span>
+                <meta itemprop="position" content="{{ loop.index }}" />
+            {% endif %}
+            {% if not loop.last %}
+                <span class="breadcrumb-separator" aria-hidden="true">›</span>
+            {% endif %}
+        </li>
+        {% endfor %}
+    </ol>
+</nav>
+{% endif %}

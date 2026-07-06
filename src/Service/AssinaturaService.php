@@ -1,10 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Service;
 
 use App\Entity\Assinatura;
 use App\Entity\Cliente;
+use App\Entity\Kit;
 use App\Entity\Pedido;
+use App\Entity\Pet;
 use App\Enum\SubscriptionStatus;
 use App\Repository\Interface\AssinaturaRepositoryInterface;
 use App\Repository\Interface\ClienteRepositoryInterface;
@@ -13,15 +17,12 @@ use App\Service\Interface\AssinaturaServiceInterface;
 class AssinaturaService implements AssinaturaServiceInterface
 {
     public function __construct(
-        private readonly AssinaturaRepositoryInterface $assinaturaRepository,
-        private readonly ClienteRepositoryInterface $clienteRepository,
+        private AssinaturaRepositoryInterface $assinaturaRepository,
+        private ClienteRepositoryInterface    $clienteRepository,
     ) {
     }
 
-    /**
-     * Domain: Create a new Assinatura from kit+pedido
-     */
-    public function createAssinatura(Cliente $cliente, mixed $kit, Pedido $pedido): Assinatura
+    public function createAssinatura(Cliente $cliente, Kit $kit, Pedido $pedido): Assinatura
     {
         $assinatura = (new Assinatura())
             ->setPlano($kit->getNome())
@@ -37,9 +38,6 @@ class AssinaturaService implements AssinaturaServiceInterface
         return $assinatura;
     }
 
-    /**
-     * Domain: Calculate next billing date
-     */
     public function getProximaCobranca(Assinatura $assinatura): ?\DateTimeImmutable
     {
         if ($assinatura->getStatus() !== SubscriptionStatus::ACTIVE) {
@@ -50,17 +48,11 @@ class AssinaturaService implements AssinaturaServiceInterface
         return $baseDate->modify('+' . $assinatura->getIntervaloDias() . ' days');
     }
 
-    /**
-     * Domain: Check if subscription is active
-     */
     public function isActive(Assinatura $assinatura): bool
     {
         return $assinatura->getStatus() === SubscriptionStatus::ACTIVE;
     }
 
-    /**
-     * Domain: Activate subscription
-     */
     public function ativar(Assinatura $assinatura): void
     {
         if ($assinatura->getStatus() === SubscriptionStatus::EXPIRED) {
@@ -70,9 +62,6 @@ class AssinaturaService implements AssinaturaServiceInterface
         $assinatura->setStatus(SubscriptionStatus::ACTIVE);
     }
 
-    /**
-     * Domain: Cancel subscription
-     */
     public function cancelar(Assinatura $assinatura): void
     {
         if ($assinatura->getStatus() === SubscriptionStatus::CANCELLED) {
@@ -83,17 +72,11 @@ class AssinaturaService implements AssinaturaServiceInterface
         $assinatura->setDataFim(new \DateTimeImmutable());
     }
 
-    /**
-     * Domain: Register a billing event
-     */
     public function registrarCobranca(Assinatura $assinatura): void
     {
         $assinatura->setDataUltimaCobranca(new \DateTimeImmutable());
     }
 
-    /**
-     * Domain: Check if subscription is expired
-     */
     public function isVencida(Assinatura $assinatura): bool
     {
         if ($assinatura->getDataFim() !== null) {
@@ -108,9 +91,63 @@ class AssinaturaService implements AssinaturaServiceInterface
         return $proximaCobranca < new \DateTimeImmutable();
     }
 
-    /**
-     * Repository: List all subscriptions for a user
-     */
+    public function simulateSubscription(Pet $pet, Kit $kit): array
+    {
+        $precoMensal = $kit->getPreco();
+        $precoAnual = $precoMensal * 12;
+        $descontoAnual = $precoAnual * 0.15;
+        $precoAnualComDesconto = $precoAnual - $descontoAnual;
+
+        return [
+            'pet' => $pet->getNome(),
+            'kit' => $kit->getNome(),
+            'mensal' => $precoMensal,
+            'anual' => $precoAnualComDesconto,
+            'economia_anual' => $descontoAnual,
+            'proxima_cobranca' => $this->calcularProximaCobranca(30),
+        ];
+    }
+
+    public function createSubscription(int $userId, Pet $pet, Kit $kit): Assinatura
+    {
+        $cliente = $this->getClienteOrThrow($userId);
+
+        $pedido = (new Pedido())
+            ->setCliente($cliente)
+            ->setKit($kit)
+            ->setPet($pet)
+            ->setValorTotal($kit->getPreco())
+            ->setStatus(\App\Enum\OrderStatus::PENDING)
+            ->setDataPedido(new \DateTimeImmutable())
+            ->initUuid();
+
+        return $this->createAssinatura($cliente, $kit, $pedido);
+    }
+
+    public function getSubscriptionOrThrow(string $assinaturaId): Assinatura
+    {
+        return $this->getAssinaturaOrThrow($assinaturaId);
+    }
+
+    public function getUserSubscriptions(int $userId): array
+    {
+        return $this->listAssinaturasByUserId($userId);
+    }
+
+    public function cancelSubscription(Assinatura $assinatura): void
+    {
+        $this->cancelar($assinatura);
+    }
+
+    public function pauseSubscription(Assinatura $assinatura): void
+    {
+        if ($assinatura->getStatus() !== SubscriptionStatus::ACTIVE) {
+            throw new \DomainException('Somente assinaturas ativas podem ser pausadas.');
+        }
+
+        $assinatura->setStatus(SubscriptionStatus::PAUSED);
+    }
+
     public function listAssinaturasByUserId(int $userId): array
     {
         $cliente = $this->getClienteOrThrow($userId);
@@ -118,9 +155,6 @@ class AssinaturaService implements AssinaturaServiceInterface
         return $this->assinaturaRepository->findByClienteId($cliente->getId());
     }
 
-    /**
-     * Repository: Find a single subscription by ID
-     */
     public function getAssinaturaOrThrow(string $assinaturaId): Assinatura
     {
         $assinatura = $this->assinaturaRepository->find($assinaturaId);
@@ -131,7 +165,7 @@ class AssinaturaService implements AssinaturaServiceInterface
         return $assinatura;
     }
 
-    private function getClienteOrThrow(int $userId): mixed
+    private function getClienteOrThrow(int $userId): Cliente
     {
         $cliente = $this->clienteRepository->findOneByUserId($userId);
         if ($cliente === null) {
@@ -139,5 +173,10 @@ class AssinaturaService implements AssinaturaServiceInterface
         }
 
         return $cliente;
+    }
+
+    private function calcularProximaCobranca(int $intervaloDias): \DateTimeImmutable
+    {
+        return (new \DateTimeImmutable())->modify('+' . $intervaloDias . ' days');
     }
 }

@@ -33,7 +33,6 @@ class PedidoService implements PedidoServiceInterface
         $pedido = (new Pedido())
             ->setCliente($cliente)
             ->setKit($kit)
-            ->setPet($pet)
             ->setValorTotal($kit->getPreco())
             ->setStatus(OrderStatus::PENDING)
             ->setDataPedido(new \DateTimeImmutable())

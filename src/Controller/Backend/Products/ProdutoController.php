@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller\Backend;
+namespace App\Controller\Backend\Products;
 
 use App\Entity\Produto;
 use App\Repository\CategoriaRepository;

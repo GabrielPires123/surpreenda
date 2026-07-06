@@ -7,36 +7,231 @@
 {% endblock %}
 
 {% block body %}
-<div class="product-page">
-    <h1 class="page-title">Produtos</h1>
-    <p class="page-subtitle">
-        {% if categoria is defined and categoria %}
-            Categoria: {{ categoria.nome }}
-        {% else %}
-            Todos os produtos
-        {% endif %}
-    </p>
+<div class="plp-page">
+    {{ include('components/breadcrumb.html.twig', {
+        items: [
+            { label: 'Início', url: path('home_index') },
+            { label: categoria is defined and categoria ? categoria.nome : 'Produtos' }
+        ]
+    }) }}
 
-    {% if produtos is empty %}
-        <p class="no-data">Nenhum produto encontrado.</p>
-    {% else %}
-        <div class="product-grid">
-            {% for produto in produtos %}
-                <div class="product-card">
-                    <div class="product-image">
-                        {% if produto.imagemUrl %}
-                            <img src="{{ asset(produto.imagemUrl) }}" alt="{{ produto.nome }}">
-                        {% else %}
-                            <img src="{{ asset('3f8d2b61c81f6a1fb9deb8627ce294df1a516f9e.jpg') }}" alt="{{ produto.nome }}">
-                        {% endif %}
-                    </div>
-                    <h3 class="product-name">{{ produto.nome }}</h3>
-                    <p class="product-desc">{{ produto.descricao|slice(0, 80) }}{% if produto.descricao|length > 80 %}...{% endif %}</p>
-                    <span class="product-price">R$ {{ produto.precoVenda|number_format(2, ',', '.') }}</span>
-                    <a href="{{ path('product_show', {id: produto.id}) }}" class="btn-primary">Ver detalhes</a>
-                </div>
-            {% endfor %}
+    {# === Page Header === #}
+    <div class="plp-header">
+        <div class="plp-header-text">
+            <h1 class="plp-title">
+                {% if searchQuery %}
+                    Resultados para "{{ searchQuery }}"
+                {% elseif selectedCategoria %}
+                    {% for cat in categorias %}{% if cat.id == selectedCategoria %}{{ cat.nome }}{% endif %}{% endfor %}
+                {% else %}
+                    Todos os produtos
+                {% endif %}
+            </h1>
+            <p class="plp-count">{{ produtos|length }} produto{{ produtos|length != 1 ? 's' : '' }}</p>
         </div>
-    {% endif %}
+        <div class="plp-sort">
+            <label for="sort-select" class="sr-only">Ordenar por</label>
+            <select id="sort-select" class="sort-select" data-sort>
+                <option value="nome_asc" {{ selectedSort == 'nome_asc' ? 'selected' : '' }}>A → Z</option>
+                <option value="nome_desc" {{ selectedSort == 'nome_desc' ? 'selected' : '' }}>Z → A</option>
+                <option value="preco_asc" {{ selectedSort == 'preco_asc' ? 'selected' : '' }}>Menor preço</option>
+                <option value="preco_desc" {{ selectedSort == 'preco_desc' ? 'selected' : '' }}>Maior preço</option>
+                <option value="recent" {{ selectedSort == 'recent' ? 'selected' : '' }}>Mais recentes</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="plp-layout">
+        {# === Sidebar Filters === #}
+        <aside class="plp-sidebar" id="plp-sidebar">
+            <button class="sidebar-toggle" id="sidebar-toggle" aria-expanded="false" aria-controls="sidebar-content">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="4" y1="6" x2="20" y2="6"/><line x1="4" y1="12" x2="14" y2="12"/><line x1="4" y1="18" x2="8" y2="18"/></svg>
+                Filtros
+            </button>
+            <div class="sidebar-content" id="sidebar-content">
+                <div class="filter-group">
+                    <h3 class="filter-heading">Categoria</h3>
+                    <ul class="filter-list">
+                        <li>
+                            <label class="filter-checkbox {{ selectedCategoria == '' ? 'active' : '' }}">
+                                <input type="checkbox" data-filter="categoria" value="" {{ selectedCategoria == '' ? 'checked' : '' }}>
+                                <span>Todas</span>
+                            </label>
+                        </li>
+                        {% for cat in categorias %}
+                        <li>
+                            <label class="filter-checkbox {{ selectedCategoria == cat.id ? 'active' : '' }}">
+                                <input type="checkbox" data-filter="categoria" value="{{ cat.id }}" {{ selectedCategoria == cat.id ? 'checked' : '' }}>
+                                <span>{{ cat.nome }}</span>
+                            </label>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                <div class="filter-group">
+                    <h3 class="filter-heading">Preço</h3>
+                    <ul class="filter-list">
+                        <li>
+                            <label class="filter-checkbox">
+                                <input type="checkbox" data-filter="preco" value="0-25">
+                                <span>Até R$ 25</span>
+                            </label>
+                        </li>
+                        <li>
+                            <label class="filter-checkbox">
+                                <input type="checkbox" data-filter="preco" value="25-50">
+                                <span>R$ 25 – R$ 50</span>
+                            </label>
+                        </li>
+                        <li>
+                            <label class="filter-checkbox">
+                                <input type="checkbox" data-filter="preco" value="50-100">
+                                <span>R$ 50 – R$ 100</span>
+                            </label>
+                        </li>
+                        <li>
+                            <label class="filter-checkbox">
+                                <input type="checkbox" data-filter="preco" value="100-9999">
+                                <span>Acima de R$ 100</span>
+                            </label>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </aside>
+
+        {# === Overlay for mobile sidebar === #}
+        <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+        {# === Product Grid === #}
+        <div class="plp-main">
+            {% if produtos is empty %}
+                <div class="plp-empty">
+                    <svg width="64" height="64" viewBox="0 0 64 64" fill="none"><circle cx="32" cy="32" r="28" stroke="var(--color-border-soft)" stroke-width="2"/><path d="M22 32h20M32 22v20" stroke="var(--color-text-soft)" stroke-width="2" stroke-linecap="round"/></svg>
+                    <h2 class="empty-title">Nenhum produto encontrado</h2>
+                    <p class="empty-text">
+                        {% if searchQuery %}
+                            Nenhum resultado para "{{ searchQuery }}".
+                        {% else %}
+                            Nenhum produto disponível no momento.
+                        {% endif %}
+                    </p>
+                    <a href="{{ path('product_index') }}" class="empty-link">Ver todos os produtos</a>
+                </div>
+            {% else %}
+                <div class="plp-grid">
+                    {% for produto in produtos %}
+                    <a href="{{ path('product_show', { id: produto.id }) }}" class="plp-card" data-categoria="{{ produto.categoria ? produto.categoria.id : '' }}" data-preco="{{ produto.precoVenda }}" data-nome="{{ produto.nome }}">
+                        <div class="plp-card-image">
+                            {% if produto.imagemUrl %}
+                                <img src="{{ asset(produto.imagemUrl) }}" alt="{{ produto.nome }}" loading="lazy">
+                            {% else %}
+                                <img src="{{ asset('3f8d2b61c81f6a1fb9deb8627ce294df1a516f9e.jpg') }}" alt="{{ produto.nome }}" loading="lazy">
+                            {% endif %}
+                        </div>
+                        <div class="plp-card-body">
+                            {% if produto.categoria %}
+                            <span class="plp-card-category">{{ produto.categoria.nome }}</span>
+                            {% endif %}
+                            <h2 class="plp-card-title">{{ produto.nome }}</h2>
+                            <span class="plp-card-price">
+                                {{ produto.precoVenda|default(0)|number_format(2, ',', '.') }}
+                            </span>
+                        </div>
+                        <span class="plp-add-btn" role="button" tabindex="0" data-add-to-cart="{{ produto.id }}" data-item-name="{{ produto.nome }}" data-item-type="produto" aria-label="Adicionar {{ produto.nome }} ao carrinho">
+                            Adicionar ao carrinho
+                        </span>
+                    </a>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+    </div>
 </div>
+{% endblock %}
+
+{% block javascripts %}
+{{ parent() }}
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const toggle = document.getElementById('sidebar-toggle');
+    const content = document.getElementById('sidebar-content');
+    const overlay = document.getElementById('sidebar-overlay');
+    const sidebar = document.getElementById('plp-sidebar');
+
+    if (!toggle) return;
+
+    function openSidebar() {
+        content.classList.add('open');
+        overlay.classList.add('active');
+        toggle.setAttribute('aria-expanded', 'true');
+    }
+    function closeSidebar() {
+        content.classList.remove('open');
+        overlay.classList.remove('active');
+        toggle.setAttribute('aria-expanded', 'false');
+    }
+
+    toggle.addEventListener('click', () => {
+        if (content.classList.contains('open')) {
+            closeSidebar();
+        } else {
+            openSidebar();
+        }
+    });
+
+    if (overlay) {
+        overlay.addEventListener('click', closeSidebar);
+    }
+
+    // Apply filters on checkbox change
+    const checkboxes = content?.querySelectorAll('[data-filter]');
+    if (checkboxes) {
+        checkboxes.forEach(cb => {
+            cb.addEventListener('change', applyFilters);
+        });
+    }
+
+    const sortSelect = document.querySelector('[data-sort]');
+    if (sortSelect) {
+        sortSelect.addEventListener('change', () => {
+            const params = new URLSearchParams(window.location.search);
+            params.set('sort', sortSelect.value);
+            window.location.search = params.toString();
+        });
+    }
+
+    function applyFilters() {
+        const cards = document.querySelectorAll('.plp-card');
+        const checkedCat = content?.querySelector('[data-filter="categoria"]:checked')?.value;
+        const checkedPrice = [...content.querySelectorAll('[data-filter="preco"]:checked')].map(c => c.value);
+
+        cards.forEach(card => {
+            let show = true;
+
+            if (checkedCat !== undefined && checkedCat !== '') {
+                show = show && card.dataset.categoria === checkedCat;
+            }
+
+            if (checkedPrice.length > 0) {
+                const price = parseFloat(card.dataset.preco);
+                const matchPrice = checkedPrice.some(range => {
+                    const [min, max] = range.split('-').map(Number);
+                    return price >= min && price <= max;
+                });
+                show = show && matchPrice;
+            }
+
+            card.style.display = show ? '' : 'none';
+        });
+
+        // Update count
+        const visible = document.querySelectorAll('.plp-card[style=""], .plp-card:not([style])').length;
+        const countEl = document.querySelector('.plp-count');
+        if (countEl) {
+            countEl.textContent = `${visible} produto${visible !== 1 ? 's' : ''}`;
+        }
+    }
+});
+</script>
 {% endblock %}

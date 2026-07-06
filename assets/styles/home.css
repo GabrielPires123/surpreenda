@@ -1,4 +1,4 @@
-/* Home Page Styles */
+/* === Home Page — Premium Redesign === */
 *, *::before, *::after {
     box-sizing: border-box;
 }
@@ -9,154 +9,176 @@
     padding: 2rem 1rem;
 }
 
+/* Hero with organic shape and gradient */
 .home-hero {
     text-align: center;
     padding: 4rem 2rem;
-    background: #f4ead5;
-    border-radius: 20px;
+    background: var(--color-bg-warm);
+    border-radius: var(--radius-organic);
     margin-bottom: 3rem;
+    position: relative;
+    overflow: hidden;
+    border: 1px solid var(--color-border-soft);
+    box-shadow: var(--shadow-sm);
+}
+
+.home-hero::before {
+    content: '';
+    position: absolute;
+    top: -20%;
+    right: -10%;
+    width: 300px;
+    height: 300px;
+    background: radial-gradient(circle, rgba(0, 0, 0, 0.03) 0%, transparent 70%);
+    border-radius: var(--radius-organic);
+    pointer-events: none;
+}
+
+.home-hero::after {
+    content: '';
+    position: absolute;
+    bottom: -15%;
+    left: -5%;
+    width: 250px;
+    height: 250px;
+    background: radial-gradient(circle, rgba(255, 110, 64, 0.05) 0%, transparent 70%);
+    border-radius: var(--radius-organic);
+    pointer-events: none;
 }
 
 .home-hero-title {
-    font-family: 'Nunito', sans-serif;
-    font-size: 3rem;
-    font-weight: 700;
-    color: #00c4cc;
+    font-family: var(--font-heading);
+    font-size: var(--font-size-4xl);
+    font-weight: 800;
+    background: var(--gradient-accent);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
     margin-bottom: 1rem;
+    position: relative;
+    z-index: 1;
 }
 
 .home-hero-subtitle {
-    font-family: 'Nunito', sans-serif;
-    font-size: 1.25rem;
-    color: #555555;
+    font-family: var(--font-family);
+    font-size: var(--font-size-xl);
+    color: var(--color-text-soft);
     margin-bottom: 2rem;
+    line-height: 1.6;
+    position: relative;
+    z-index: 1;
 }
 
 .home-btn-cta {
     display: inline-block;
     padding: 1rem 3rem;
-    background: #f0a54b;
-    color: #ffffff;
-    font-family: 'Nunito', sans-serif;
-    font-size: 1.25rem;
+    background: var(--gradient-accent);
+    color: var(--color-white);
+    font-family: var(--font-heading);
     font-weight: 700;
     text-decoration: none;
-    border-radius: 50px;
-    transition: background 0.2s;
+    border-radius: var(--radius-pill);
+    border: none;
+    cursor: pointer;
+    transition: transform var(--transition-bounce), box-shadow var(--transition-base);
+    box-shadow: var(--shadow-orange);
+    position: relative;
+    z-index: 1;
 }
 
 .home-btn-cta:hover {
-    background: #e09540;
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: var(--shadow-orange-lg);
 }
 
+.home-btn-cta:active {
+    transform: translateY(0) scale(0.98);
+}
+
+.home-btn-cta:focus-visible {
+    outline: 3px solid var(--color-orange);
+    outline-offset: 3px;
+}
+
+/* Feature cards with elevated shadows */
 .home-features {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
     gap: 1.5rem;
 }
 
 .home-feature-card {
-    background: #ffffff;
-    border: 1px solid #eeeeee;
-    border-radius: 20px;
+    background: var(--color-white);
+    border: 1px solid var(--color-border-soft);
+    border-radius: var(--radius-xl);
     padding: 2rem;
     text-align: center;
-    transition: box-shadow 0.2s;
+    transition: transform var(--transition-smooth), box-shadow var(--transition-smooth), border-color var(--transition-base);
+    box-shadow: var(--shadow-sm);
 }
 
 .home-feature-card:hover {
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    transform: translateY(-8px);
+    box-shadow: var(--shadow-md);
+    border-color: var(--color-green-sage);
 }
 
 .home-feature-icon {
     width: 60px;
     height: 60px;
-    background: #8bc34a;
-    border-radius: 50px;
+    background: var(--gradient-accent);
+    border-radius: 50%;
     margin: 0 auto 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: var(--shadow-cyan);
 }
 
 .home-feature-card h3 {
-    font-family: 'Nunito', sans-serif;
-    font-size: 1.25rem;
+    font-family: var(--font-heading);
+    font-size: var(--font-size-xl);
     font-weight: 700;
-    color: #333333;
+    color: var(--color-text);
     margin-bottom: 0.5rem;
 }
 
 .home-feature-card p {
-    font-family: 'Nunito', sans-serif;
+    font-family: var(--font-family);
     font-size: 0.875rem;
-    color: #555555;
+    color: var(--color-text-soft);
     margin-bottom: 1rem;
+    line-height: 1.6;
 }
 
 .home-feature-link {
     display: inline-block;
-    padding: 0.5rem 1.5rem;
-    background: #00c4cc;
-    color: #ffffff;
-    font-family: 'Nunito', sans-serif;
-    font-size: 0.875rem;
+    padding: 0.75rem 1.5rem;
+    background: var(--gradient-accent);
+    color: var(--color-white);
+    font-family: var(--font-heading);
     font-weight: 600;
     text-decoration: none;
-    border-radius: 10px;
-    transition: background 0.2s;
+    border-radius: var(--radius-pill);
+    transition: transform var(--transition-bounce), box-shadow var(--transition-base);
+    box-shadow: var(--shadow-orange);
+    min-height: 44px;
 }
 
 .home-feature-link:hover {
-    background: #00a3aa;
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-orange-lg);
 }
 
+.home-feature-link:focus-visible {
+    outline: 3px solid var(--color-orange);
+    outline-offset: 2px;
+}
+
+/* Responsive */
 @media (max-width: 768px) {
-    .home-main {
-        padding: 1rem 0.5rem;
-    }
-
     .home-hero {
-        padding: 2rem 1rem;
-        border-radius: 12px;
-        margin-bottom: 2rem;
+        padding: 3rem 1.5rem;
     }
-
     .home-hero-title {
-        font-size: 2rem;
-    }
-
-    .home-hero-subtitle {
-        font-size: 1rem;
-    }
-
-    .home-btn-cta {
-        padding: 0.75rem 2rem;
-        font-size: 1rem;
-    }
-
-    .home-features {
-        grid-template-columns: 1fr;
-        gap: 1rem;
-    }
-
-    .home-feature-card {
-        padding: 1.5rem;
-        border-radius: 12px;
-    }
-
-    .home-feature-icon {
-        width: 50px;
-        height: 50px;
-    }
-
-    .home-feature-card h3 {
-        font-size: 1.1rem;
-    }
-
-    .home-feature-card p {
-        font-size: 0.8rem;
-    }
-
-    .home-feature-link {
-        padding: 0.5rem 1rem;
-        font-size: 0.8rem;
+        font-size: 2.2rem;
     }
 }

@@ -70,4 +70,21 @@ class ProdutoRepository extends ServiceEntityRepository implements ProdutoReposi
             throw new \RuntimeException('Erro ao buscar produtos por categoria: ' . $e->getMessage(), 0, $e);
         }
     }
+
+    /** @return Produto[] */
+    public function search(string $query): array
+    {
+        try {
+            return $this->createQueryBuilder('p')
+                ->andWhere('p.ativo = :ativo')
+                ->andWhere('p.nome LIKE :query OR p.descricao LIKE :query')
+                ->setParameter('ativo', true)
+                ->setParameter('query', '%' . $query . '%')
+                ->orderBy('p.nome', 'ASC')
+                ->getQuery()
+                ->getResult();
+        } catch (\Doctrine\ORM\Exception\ORMException $e) {
+            throw new \RuntimeException('Erro ao buscar produtos: ' . $e->getMessage(), 0, $e);
+        }
+    }
 }

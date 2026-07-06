@@ -1,0 +1,65 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Meus Pedidos - Surpreenda Pet{% endblock %}
+
+{% block stylesheets %}
+<link rel="stylesheet" href="{{ asset('styles/pedido/pedido.css') }}">
+{% endblock %}
+
+{% block body %}
+<div class="pedidos-page">
+    {{ include('components/breadcrumb.html.twig', {
+        items: [
+            { label: 'Início', url: path('home_index') },
+            { label: 'Meus Pedidos' }
+        ]
+    }) }}
+
+    <h1 class="page-title">Meus Pedidos</h1>
+    <p class="page-subtitle">Acompanhe o histórico dos seus pedidos</p>
+
+    {% if pedidos is empty %}
+        <div class="no-data-card">
+            <svg class="no-data-icon" width="64" height="64" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" stroke="var(--color-text-muted)" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+            <p class="no-data-text">Você ainda não fez nenhum pedido.</p>
+            <a href="{{ path('kit_index') }}" class="btn-primary">Explorar Kits</a>
+        </div>
+    {% else %}
+        <div class="pedidos-list">
+            {% for pedido in pedidos %}
+                <a href="{{ path('pedido_show', {id: pedido.id}) }}" class="pedido-card">
+                    <div class="pedido-header">
+                        <div class="pedido-id-wrapper">
+                            <span class="pedido-id">#{{ pedido.id|slice(-6)|upper }}</span>
+                            <span class="pedido-status status-{{ pedido.status.value }}">
+                                {{ pedido.status.value|trans }}
+                            </span>
+                        </div>
+                        <span class="pedido-date">{{ pedido.dataCriacao|date('d/m/Y') }}</span>
+                    </div>
+
+                    <div class="pedido-body">
+                        <div class="pedido-item">
+                            <span class="pedido-item-name">{{ pedido.kit.nome }}</span>
+                            <span class="pedido-item-price">R$ {{ pedido.kit.preco|number_format(2, ',', '.') }}</span>
+                        </div>
+                        {% if pedido.pet %}
+                            <div class="pedido-pet-info">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="var(--color-text-muted)" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M12 18c-4 0-7.5-2.5-7.5-6S8 6 12 6s7.5 2.5 7.5 6-3.5 6-7.5 6z"/>
+                                    <circle cx="9" cy="10" r="1.2"/>
+                                    <circle cx="15" cy="10" r="1.2"/>
+                                    <path d="M10 14s.8 1.2 2 1.2 2-1.2 2-1.2"/>
+                                </svg>
+                                <span>{{ pedido.pet.nome }}</span>
+                            </div>
+                        {% endif %}
+                    </div>
+                </a>
+            {% endfor %}
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

@@ -26,7 +26,7 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 class ProfileController extends AbstractController
 {
     public function __construct(
-        private readonly ClienteService $clienteService,
+        private ClienteService $clienteService,
     ) {
     }
 

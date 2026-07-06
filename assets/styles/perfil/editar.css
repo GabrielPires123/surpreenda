@@ -1,125 +1,181 @@
-/* Editar Perfil Styles */
-*, *::before, *::after {
-    box-sizing: border-box;
+/* === Editar Perfil Page === */
+.editar-page {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 0 1.5rem 3rem;
 }
 
-.editar-perfil-container {
-    max-width: 500px;
-    margin: 3rem auto;
-    padding: 2rem;
-    background: #ffffff;
-    border-radius: 20px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+.editar-title {
+    font-family: var(--font-heading);
+    font-size: var(--font-size-xl);
+    font-weight: 800;
+    color: var(--color-text);
+    margin-bottom: 2rem;
 }
 
-.editar-perfil-container h2 {
-    font-family: 'Nunito', sans-serif;
-    font-size: 1.5rem;
+.editar-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+/* === Form Card === */
+.editar-form-card {
+    background: var(--color-white);
+    border: 1px solid var(--color-border-soft);
+    border-radius: var(--radius-lg);
+    padding: 1.5rem;
+    box-shadow: var(--shadow-sm);
+}
+
+.editar-form-card-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: var(--font-heading);
+    font-size: 1rem;
     font-weight: 700;
-    color: #00c4cc;
-    margin-bottom: 1.5rem;
-    text-align: center;
+    color: var(--color-text);
+    margin-bottom: 1.25rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 2px solid var(--color-green-sage);
 }
 
-.editar-perfil-form {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
+.editar-form-card-header svg {
+    flex-shrink: 0;
 }
 
-.editar-perfil-form .form-group {
-    display: flex;
-    flex-direction: column;
-    gap: 0.25rem;
+/* === Form Group === */
+.editar-form-group {
+    margin-bottom: 1.25rem;
 }
 
-.editar-perfil-form label {
-    font-family: 'Nunito', sans-serif;
-    font-size: 0.875rem;
+.editar-form-group:last-child {
+    margin-bottom: 0;
+}
+
+.editar-form-group label {
+    display: block;
+    font-size: var(--font-size-sm);
     font-weight: 600;
-    color: #333333;
+    color: var(--color-text);
+    margin-bottom: 0.4rem;
 }
 
-.editar-perfil-form input,
-.editar-perfil-form textarea,
-.editar-perfil-form select {
+.editar-form-group input,
+.editar-form-group select,
+.editar-form-group textarea {
+    width: 100%;
     padding: 0.75rem 1rem;
-    border: 1px solid #eeeeee;
-    border-radius: 10px;
-    font-family: 'Nunito', sans-serif;
-    font-size: 1rem;
-    color: #333333;
-    background: #f4ead5;
-    transition: border-color 0.2s;
+    border: 1px solid var(--color-border-soft);
+    border-radius: var(--radius-md);
+    font-family: var(--font-family);
+    font-size: var(--font-size-base);
+    color: var(--color-text);
+    background: var(--color-white);
+    transition: border-color var(--transition-base), box-shadow var(--transition-base);
+    min-height: 48px;
 }
 
-.editar-perfil-form input:focus,
-.editar-perfil-form textarea:focus,
-.editar-perfil-form select:focus {
+.editar-form-group input:focus,
+.editar-form-group select:focus,
+.editar-form-group textarea:focus {
+    border-color: var(--color-green-sage);
+    box-shadow: var(--shadow-focus);
     outline: none;
-    border-color: #00c4cc;
 }
 
-.btn-salvar {
-    padding: 0.75rem 2rem;
-    background: #8bc34a;
-    color: #ffffff;
-    font-family: 'Nunito', sans-serif;
-    font-size: 1rem;
-    font-weight: 600;
-    border: none;
-    border-radius: 10px;
-    cursor: pointer;
-    transition: background 0.2s;
+.editar-form-group input::placeholder {
+    color: var(--color-text-muted);
 }
 
-.btn-salvar:hover {
-    background: #7ab33a;
+.editar-form-group input:invalid:not(:placeholder-shown) {
+    border-color: var(--color-red-error);
 }
 
-.btn-cancelar {
-    padding: 0.75rem 2rem;
-    background: #f4ead5;
-    color: #333333;
-    font-family: 'Nunito', sans-serif;
-    font-size: 1rem;
-    font-weight: 600;
-    border: none;
-    border-radius: 10px;
-    cursor: pointer;
-    text-decoration: none;
-    transition: background 0.2s;
-}
-
-.btn-cancelar:hover {
-    background: #e8dbb5;
-}
-
-.form-buttons {
+/* === Actions === */
+.editar-actions {
     display: flex;
     gap: 1rem;
-    justify-content: center;
+    justify-content: flex-end;
 }
 
-/* Responsividade */
-@media (max-width: 768px) {
-    .editar-perfil-container {
-        margin: 1.5rem 1rem;
-        padding: 1rem;
+.editar-btn-salvar {
+    padding: 0.875rem 2rem;
+    background: var(--gradient-accent);
+    color: var(--color-white);
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: var(--font-size-base);
+    border: none;
+    border-radius: var(--radius-lg);
+    cursor: pointer;
+    box-shadow: var(--shadow-orange);
+    min-height: 48px;
+    transition: transform var(--transition-base), box-shadow var(--transition-base);
+}
+
+.editar-btn-salvar:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-orange-lg);
+}
+
+.editar-btn-salvar:active {
+    transform: translateY(0);
+}
+
+.editar-btn-salvar:focus-visible {
+    outline: 2px solid var(--color-green-sage);
+    outline-offset: 3px;
+}
+
+.editar-btn-cancelar {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.875rem 2rem;
+    background: var(--color-white);
+    color: var(--color-text-soft);
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: var(--font-size-base);
+    border: 2px solid var(--color-border-dark);
+    border-radius: var(--radius-lg);
+    text-decoration: none;
+    min-height: 48px;
+    transition: background var(--transition-base), color var(--transition-base), border-color var(--transition-base);
+}
+
+.editar-btn-cancelar:hover {
+    background: var(--color-beige-light);
+    color: var(--color-text);
+    border-color: var(--color-text-soft);
+}
+
+.editar-btn-cancelar:focus-visible {
+    outline: 2px solid var(--color-orange);
+    outline-offset: 3px;
+}
+
+/* === Responsive === */
+@media (max-width: 576px) {
+    .editar-page {
+        padding: 0 1rem 2rem;
     }
 
-    .editar-perfil-container h2 {
-        font-size: 1.25rem;
+    .editar-actions {
+        flex-direction: column-reverse;
     }
 
-    .form-buttons {
-        flex-direction: column;
-        gap: 0.75rem;
-    }
-
-    .btn-salvar,
-    .btn-cancelar {
+    .editar-btn-salvar,
+    .editar-btn-cancelar {
         width: 100%;
         text-align: center;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .editar-btn-salvar:hover {
+        transform: none;
     }
 }

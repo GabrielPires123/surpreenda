@@ -1,3 +1,107 @@
 <footer class="site-footer">
-    <p>&copy; {{ "now"|date("Y") }} Surpreenda Pet. Todos os direitos reservados.</p>
+    <div class="footer-grid">
+        {# Coluna 1 — Marca #}
+        <div class="footer-col footer-col--brand">
+            <a href="{{ path('home_index') }}" class="footer-logo" aria-label="Surpreenda Pet - Início">
+                <svg class="footer-logo-icon" width="28" height="28" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                    <ellipse cx="50" cy="62" rx="22" ry="26" fill="currentColor"/>
+                    <circle cx="28" cy="32" r="12" fill="currentColor"/>
+                    <circle cx="72" cy="32" r="12" fill="currentColor"/>
+                    <circle cx="18" cy="58" r="10" fill="currentColor"/>
+                    <circle cx="82" cy="58" r="10" fill="currentColor"/>
+                </svg>
+                <span class="footer-logo-text">Surpreenda <span class="footer-logo-accent">Pet</span></span>
+            </a>
+            <p class="footer-microcopy">Fortalecendo o vínculo com quem te ama de verdade.</p>
+            <div class="footer-social" aria-label="Redes sociais">
+                <a href="#" class="social-icon" aria-label="Instagram" rel="noopener" target="_blank">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="2" y="2" width="20" height="20" rx="5"/>
+                        <circle cx="12" cy="12" r="5"/>
+                        <circle cx="17.5" cy="6.5" r="1.5" fill="currentColor" stroke="none"/>
+                    </svg>
+                </a>
+                <a href="#" class="social-icon" aria-label="Facebook" rel="noopener" target="_blank">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/>
+                    </svg>
+                </a>
+                <a href="#" class="social-icon" aria-label="TikTok" rel="noopener" target="_blank">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5"/>
+                    </svg>
+                </a>
+            </div>
+        </div>
+
+        {# Coluna 2 — Descubra #}
+        <div class="footer-col">
+            <h3 class="footer-heading">Descubra</h3>
+            <nav aria-label="Links de descoberta">
+                <ul class="footer-links">
+                    <li><a href="{{ path('assinatura_index') }}">Planos de Assinatura</a></li>
+                    <li><a href="{{ path('kit_index') }}">Nossos Kits</a></li>
+                    <li><a href="{{ path('product_index') }}">Produtos Avulsos</a></li>
+                    <li><a href="{{ path('home_ajuda_central') }}">Dicas e Blog</a></li>
+                </ul>
+            </nav>
+        </div>
+
+        {# Coluna 3 — Ajuda #}
+        <div class="footer-col">
+            <h3 class="footer-heading">Ajuda & Suporte</h3>
+            <nav aria-label="Ajuda e suporte">
+                <ul class="footer-links">
+                    <li><a href="{{ path('home_ajuda') }}">Central de Ajuda</a></li>
+                    <li><a href="#">FAQ — Perguntas Frequentes</a></li>
+                    <li><a href="#">Política de Frete</a></li>
+                    <li><a href="#">Trocas e Devoluções</a></li>
+                    <li><a href="#">Cancelar Assinatura</a></li>
+                </ul>
+            </nav>
+        </div>
+
+        {# Coluna 4 — Transparência #}
+        <div class="footer-col">
+            <h3 class="footer-heading">Transparência</h3>
+            <div class="footer-trust">
+                <p class="trust-item"><strong>CNPJ:</strong> 00.000.000/0001-00</p>
+                <p class="trust-item"><strong>E-mail:</strong> contato@surpreendapet.com.br</p>
+                <div class="payment-methods" aria-label="Métodos de pagamento aceitos">
+                    <span class="payment-label">Pagamento:</span>
+                    <div class="payment-icons">
+                        <span class="pay-icon" title="Pix">
+                            <svg width="28" height="28" viewBox="0 0 40 40" fill="none">
+                                <rect width="40" height="40" rx="6" fill="rgba(255,255,255,0.08)"/>
+                                <path d="M24.3 15.2L20 21.8L15.7 15.2H11L17.5 24.5L17.4 24.6L11 34H15.7L20 27.6L24.3 34H29L22.5 24.5L29 15.2H24.3Z" fill="var(--color-footer-text)" opacity="0.9"/>
+                            </svg>
+                        </span>
+                        <span class="pay-icon" title="Visa">
+                            <svg width="36" height="22" viewBox="0 0 36 22" fill="none">
+                                <rect width="36" height="22" rx="4" fill="rgba(255,255,255,0.08)"/>
+                                <text x="18" y="14.5" font-size="8" font-weight="700" fill="var(--color-footer-text)" text-anchor="middle" font-family="sans-serif">VISA</text>
+                            </svg>
+                        </span>
+                        <span class="pay-icon" title="Mastercard">
+                            <svg width="36" height="22" viewBox="0 0 36 22" fill="none">
+                                <rect width="36" height="22" rx="4" fill="rgba(255,255,255,0.08)"/>
+                                <circle cx="14" cy="11" r="5" fill="#EB001B" opacity="0.8"/>
+                                <circle cx="22" cy="11" r="5" fill="#F79E1B" opacity="0.8"/>
+                            </svg>
+                        </span>
+                        <span class="pay-icon" title="Elo">
+                            <svg width="36" height="22" viewBox="0 0 36 22" fill="none">
+                                <rect width="36" height="22" rx="4" fill="rgba(255,255,255,0.08)"/>
+                                <text x="18" y="14.5" font-size="8" font-weight="700" fill="var(--color-footer-text)" text-anchor="middle" font-family="sans-serif">Elo</text>
+                            </svg>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer-bottom">
+        <p>&copy; {{ "now"|date("Y") }} Surpreenda Pet. Todos os direitos reservados.</p>
+    </div>
 </footer>
